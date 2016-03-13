@@ -1,0 +1,34 @@
+server {
+        listen   8080;
+
+
+        root /var/www/wikkit/laravel;
+        index index.php index.html index.htm;
+
+        server_name localhost;
+
+        location / {
+                try_files $uri $uri/ /var/www/wikkit/laravel/public/index.php;
+        }
+
+        error_page 404 /var/www/wikkit/laravel/404.html;
+
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+              root /usr/share/nginx/www;
+        }
+
+        rewrite ^/(api/.*)$ /var/www/sixuan-api/backend/laravel/public/index.php?/$1 last;
+
+        # pass the PHP scripts to FastCGI server listening on the php-fpm socket
+        location ~ \.php$ {
+                try_files $uri =404;
+                root           /var/www/wikkit/laravel/public;
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include fastcgi_params;
+
+        }
+
+}
