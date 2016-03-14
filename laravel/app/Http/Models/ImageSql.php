@@ -32,7 +32,7 @@ class ImageSql extends BaseModelSql
             ->where('i.images_id', '=', $imageId)
             ->first([
                 'i.faces_id',
-                'i.path',
+                'i.img_path',
                 'f.age',
                 'f.gender',
                 'f.cameras_id',
@@ -49,7 +49,7 @@ class ImageSql extends BaseModelSql
             ->where('i.idImages', '=', $idImages)
             ->first([
                 'i.faces_id',
-                'i.path',
+                'i.img_path',
                 'f.age',
                 'f.gender',
                 'f.cameras_id',
