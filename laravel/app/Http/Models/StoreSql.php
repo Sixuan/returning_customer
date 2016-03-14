@@ -131,12 +131,13 @@ class StoreSql extends BaseModelSql
                 i.img_path,
                 f.faces_id,
                 f.cameras_id,
+                f.persons_id,
                 f.possible_returning_customers
             from faces f
             join cameras c on (f.cameras_id = c.cameras_id )
             join stores s on (c.stores_id = s.stores_id)
             join images i on (i.faces_id = f.faces_id)
-            where f.timestamp < DATE_SUB(NOW(),INTERVAL 1 HOUR)
+            where f.timestamp < DATE_SUB(NOW(),INTERVAL 1 MINUTE)
                 and i.is_display = "Y"
                 and s.stores_id = '.$storeId
         ));
