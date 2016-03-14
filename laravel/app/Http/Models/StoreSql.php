@@ -120,7 +120,7 @@ class StoreSql extends BaseModelSql
             from faces f
             join cameras c on (f.cameras_id = c.cameras_id )
             join stores s on (c.stores_id = s.stores_id)
-            join transactions t on (f.faces_id = t.faces_id)
+            left join transactions t on (f.faces_id = t.faces_id)
             where DATE(f.timestamp) <= CURRENT_DATE
                   and s.stores_id = '.$storeId
         ));
