@@ -67,6 +67,24 @@ class StoreController extends Controller
         }
     }
 
+    public function sales($id) {
+        $sales[] = [
+            'sales_id' => 1,
+            'name' => 'Sixuan Liu',
+            'login_username' => 'sliu'
+        ];
+
+        $sales[] = [
+            'sales_id' => 2,
+            'name' => 'Heo Neu',
+            'login_username' => 'hneu'
+        ];
+        $content = [
+            'sales' => $sales
+        ];
+        return self::buildResponse($content, self::SUCCESS_CODE);
+    }
+
     public function load($id) {
         try{
             $content = StoreSql::getInstance()->loadFaces($id);
