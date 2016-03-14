@@ -57,10 +57,11 @@ class PersonSql extends BaseModelSql
             if(isset($input['address'])){
                 $updateArray['address'] = $input['address'];
             }
-
-            $this->getConn()->table('members')
-                ->where('persons_id', '=', $personId)
-                ->update($updateArray);
+            if(!empty($updateArray)) {
+                $this->getConn()->table('members')
+                    ->where('persons_id', '=', $personId)
+                    ->update($updateArray);
+            }
         }else{
             if(isset($input['phone_number'])){
                 $insertArray['phone'] = $input['phone_number'];
@@ -81,9 +82,10 @@ class PersonSql extends BaseModelSql
             if(isset($input['address'])){
                 $insertArray['address'] = $input['address'];
             }
-
-            $this->getConn()->table('members')
-                ->insertGetId($insertArray);
+            if(!empty($updateArray)) {
+                $this->getConn()->table('members')
+                    ->insertGetId($insertArray);
+            }
 
         }
 
