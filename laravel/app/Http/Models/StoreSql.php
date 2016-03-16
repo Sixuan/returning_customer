@@ -139,7 +139,7 @@ class StoreSql extends BaseModelSql
             join images i on (i.faces_id = f.faces_id)
             where f.timestamp < DATE_SUB(NOW(),INTERVAL 1 MINUTE)
                 and i.is_display = "Y"
-                and s.stores_id = '.$storeId
+                and s.stores_id = '.$storeId." group by f.faces_id"
         ));
 
         $facesRe = array();
