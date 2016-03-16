@@ -27,6 +27,28 @@ class ImageSql extends BaseModelSql
     }
 
     public function getImage($imageId) {
+//        $json = '{ "possible_returning_customers" : [
+//             {
+//             		"person_id" : "31233b4b1b51ac91e391e5afe130e2gd",
+//                "confident_rate" : 0.85,
+//                "img_path" : "/images/guests/31233b4b1b51ac91e391e5afe130e2gd.jpg"
+//             },
+//             {
+//             		"person_id" : "41233b4b1b51ac91e391e5afe130e2gd",
+//                "confident_rate" : 0.75,
+//                "img_path" : "/images/guests/41233b4b1b51ac91e391e5afe130e2gd.jpg"
+//             },
+//             {
+//             		"person_id" : "51233b4b1b51ac91e391e5afe130e2gd",
+//                "confident_rate" : 0.55,
+//                "img_path" : "/images/guests/51233b4b1b51ac91e391e5afe130e2gd.jpg"
+//             }
+//          ]}';
+
+//        $this->getConn()->table('faces')
+//            ->where('idFaces', '=', 4)
+//            ->update(array('possible_returning_customers' => $json));
+
         $image = $this->getConn()->table('images as i')
             ->leftJoin('faces as f', 'i.faces_id', '=', 'f.faces_id')
             ->where('i.images_id', '=', $imageId)
@@ -43,35 +65,18 @@ class ImageSql extends BaseModelSql
         return (array)$image;
     }
 
-    public function getImagesByPrimaryKeyId($idImages) {
-        $image = $this->getConn()->table('images as i')
-            ->leftJoin('faces as f', 'i.faces_id', '=', 'f.faces_id')
-            ->where('i.idImages', '=', $idImages)
-            ->first([
-                'i.faces_id',
-                'i.img_path',
-                'f.age',
-                'f.gender',
-                'f.cameras_id',
-                'f.persons_id',
-                'f.confident_rate'
-            ]);
-
-        return (array)$image;
-    }
 
     public function createImageFromInputArray(array $input) {
         $insertArray = array(
             'feature' => json_encode($input['feature']),
             'img_path' => $input['img_path'],
-            'faces_id' => $input['faces_id'],
-            'images_id' => $input['images_id']
+            'faces_id' => $input['faces_id']
         );
 
-        $this->getConn()->table('images')
-            ->insert($insertArray);
+        $id = $this->getConn()->table('images')
+            ->insertGetId($insertArray);
 
-        return $this->getImage($input['images_id']);
+        return $this->getImage($id);
     }
 
 }

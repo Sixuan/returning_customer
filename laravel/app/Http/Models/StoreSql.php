@@ -142,6 +142,15 @@ class StoreSql extends BaseModelSql
                 and s.stores_id = '.$storeId
         ));
 
+        $facesRe = array();
+        foreach($faceData as $face) {
+            $json = json_decode($face->possible_returning_customers);
+            if (is_object($json)) {
+                $face->possible_returning_customers = $json->possible_returning_customers;
+            }
+            $facesRe[] = $face;
+        }
+
         $store = array(
             'visit_count' => $storeData[0]->face_count,
             'female' => $storeData[0]->female,
@@ -151,7 +160,7 @@ class StoreSql extends BaseModelSql
 
         return array(
             'store' => $store,
-            'faces' => $faceData
+            'faces' => $facesRe
         );
     }
 

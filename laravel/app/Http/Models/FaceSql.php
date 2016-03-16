@@ -53,19 +53,27 @@ class FaceSql extends BaseModelSql
     }
 
     public function getFace($faceId) {
-        $face = $this->getConn()->table('faces as f')
+        $face = (array)$this->getConn()->table('faces as f')
             ->leftJoin('persons as p', 'p.persons_id', '=', 'f.persons_id')
             ->where('f.faces_id', '=', $faceId)
             ->first([
                 'p.age as person_age',
                 'p.gender as person_gender',
+                'f.persons_id',
+                'f.confident_rate',
                 'f.age',
                 'f.gender',
                 'f.cameras_id',
-                'f.faces_id'
+                'f.faces_id',
+                'f.possible_returning_customers'
             ]);
 
-        return (array)$face;
+        $json = json_decode($face['possible_returning_customers']);
+        if(is_object($json)) {
+            $face['possible_returning_customers'] = $json->possible_returning_customers;
+        }
+        return $face;
+
     }
 
     public function createFaceFromInputArray(array $input) {
