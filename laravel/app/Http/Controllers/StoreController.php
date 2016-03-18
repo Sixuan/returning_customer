@@ -31,11 +31,7 @@ class StoreController extends Controller
 
         $content = array(
             'store' => array(
-                'store_id' => 2
-            ),
-            'sales' => array(
-                'sales_id' => 2,
-                'name' => 'Jim'
+                'stores_id' => 2
             )
         );
 

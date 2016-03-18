@@ -42,10 +42,10 @@ class StoreSql extends BaseModelSql
 
         foreach($infos as $info) {
             $store['name'] = $info->name;
-            $store['store_id'] = $info->stores_id;
+            $store['stores_id'] = $info->stores_id;
             if($info->cameras_id != null) {
                 $store['cameras'][] = array(
-                    'camera_id' => $info->cameras_id,
+                    'cameras_id' => $info->cameras_id,
                     'rtsp_url' => $info->rtsp_url,
                     'position' => $info->position
                 );
@@ -95,7 +95,7 @@ class StoreSql extends BaseModelSql
 
         foreach($persons as $person) {
             $personsRe[] = array(
-                'person_id' => $person->persons_id,
+                'persons_id' => $person->persons_id,
                 'name' => $person->name,
                 'visit_count' => $person->visit_count,
                 'total_purchase' => $person->total_amount,

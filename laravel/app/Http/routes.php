@@ -40,6 +40,9 @@ Route::group(['prefix' => 'api'], function () {
     Route::put('transactions/{id}', 'TransactionController@update');
     Route::post('transactions', 'TransactionController@store');
 
+    Route::post('members', 'MemberController@store');
+    Route::get('members/{id}', 'MemberController@get');
+
 
     Route::put('admin/persons/{id}', 'MemberController@update');
     Route::get('admin/stores/{id}/persons', 'StoreController@persons');

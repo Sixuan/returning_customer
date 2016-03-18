@@ -29,22 +29,22 @@ class ImageSql extends BaseModelSql
     public function getImage($imageId) {
 //        $json = '{ "possible_returning_customers" : [
 //             {
-//             		"person_id" : "31233b4b1b51ac91e391e5afe130e2gd",
+//             		"persons_id" : 2,
 //                "confident_rate" : 0.85,
 //                "img_path" : "/images/guests/31233b4b1b51ac91e391e5afe130e2gd.jpg"
 //             },
 //             {
-//             		"person_id" : "41233b4b1b51ac91e391e5afe130e2gd",
+//             		"persons_id" : 3,
 //                "confident_rate" : 0.75,
 //                "img_path" : "/images/guests/41233b4b1b51ac91e391e5afe130e2gd.jpg"
 //             },
 //             {
-//             		"person_id" : "51233b4b1b51ac91e391e5afe130e2gd",
+//             		"persons_id" : 4,
 //                "confident_rate" : 0.55,
 //                "img_path" : "/images/guests/51233b4b1b51ac91e391e5afe130e2gd.jpg"
 //             }
 //          ]}';
-
+//
 //        $this->getConn()->table('faces')
 //            ->where('idFaces', '=', 4)
 //            ->update(array('possible_returning_customers' => $json));
