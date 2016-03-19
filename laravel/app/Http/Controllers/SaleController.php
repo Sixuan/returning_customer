@@ -22,8 +22,33 @@ class SaleController extends Controller
     public function store(Request $request) {
         $input = $request->input();
         try{
-            $person = PersonSql::getInstance()->createSaleInputArray($input);
-            return self::buildResponse($person, self::SUCCESS_CODE);
+            //$sale = PersonSql::getInstance()->createSaleInputArray($input);
+            return self::buildResponse(['sale' => $input], self::SUCCESS_CODE);
+
+        }catch (\Exception $e) {
+            $content = array(
+                'error' => (string)$e
+            );
+            return self::buildResponse($content, self::BAD_REQUEST);
+        }
+    }
+
+    public function destroy($id) {
+        return self::buildSuccessResponse();
+    }
+
+    /**
+     *
+     * @param  Request  $request
+     * @param  string  $id
+     * @return Response
+     */
+    public function update(Request $request, $id)
+    {
+        $input = $request->input();
+        try{
+            $sale = PersonSql::getInstance()->updateSaleInfo($input, $id);
+            return self::buildSuccessResponse();
 
         }catch (\Exception $e) {
             $content = array(

@@ -67,13 +67,15 @@ class StoreController extends Controller
         $sales[] = [
             'sales_id' => 1,
             'name' => 'Sixuan Liu',
-            'login_username' => 'sliu'
+            'login_username' => 'sliu',
+            'manager' => 'Y'
         ];
 
         $sales[] = [
             'sales_id' => 2,
             'name' => 'Heo Neu',
-            'login_username' => 'hneu'
+            'login_username' => 'hneu',
+            'manager' => 'N'
         ];
         $content = [
             'sales' => $sales

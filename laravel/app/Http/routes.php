@@ -43,6 +43,10 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('members', 'MemberController@store');
     Route::get('members/{id}', 'MemberController@get');
 
+    Route::post('admin/sales', 'SaleController@store');
+    Route::delete('admin/sales/{id}', 'SaleController@destroy');
+    Route::put('admin/sales/{id}', 'SaleController@update');
+
 
     Route::put('admin/persons/{id}', 'MemberController@update');
     Route::get('admin/stores/{id}/persons', 'StoreController@persons');

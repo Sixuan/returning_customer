@@ -83,8 +83,10 @@ class StoreSql extends BaseModelSql
                       sum(t.amount) as total_amount,
                       p.persons_id,
                       m.name,
+                      i.img_path,
                       m.timestamp
                 from faces f
+                join images i on (i.faces_id = f.faces_id)
                 join persons p on (f.persons_id = p.persons_id)
                 left join members m on (m.persons_id = p.persons_id)
                 left join transactions t on (t.faces_id = f.faces_id)
@@ -99,7 +101,8 @@ class StoreSql extends BaseModelSql
                 'name' => $person->name,
                 'visit_count' => $person->visit_count,
                 'total_purchase' => $person->total_amount,
-                'time_registered' => $person->timestamp
+                'time_registered' => $person->timestamp,
+                'img_path' => $person->img_path
             );
         }
 

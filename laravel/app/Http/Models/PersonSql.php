@@ -32,6 +32,10 @@ class PersonSql extends BaseModelSql
 
     }
 
+    public function updateSaleInfo(array $input, $id) {
+
+    }
+
     public function createOrUpdateMemberForPerson(array $input, $personId) {
 
         $exist = $this->getConn()->table('members')
