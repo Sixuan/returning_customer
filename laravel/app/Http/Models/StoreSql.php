@@ -137,8 +137,11 @@ class StoreSql extends BaseModelSql
                 f.faces_id,
                 f.cameras_id,
                 f.persons_id,
+                m.name,
                 f.possible_returning_customers
             from faces f
+            left join persons p on (f.persons_id = p.persons_id)
+            left join members m on (p.persons_id = m.persons_id)
             join cameras c on (f.cameras_id = c.cameras_id )
             join stores s on (c.stores_id = s.stores_id)
             join images i on (i.faces_id = f.faces_id)
