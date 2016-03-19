@@ -56,6 +56,7 @@ class TransactionController extends Controller
 
         }catch (\Exception $e) {
             $content = array(
+                'input' => $input,
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
