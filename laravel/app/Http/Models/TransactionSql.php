@@ -45,7 +45,7 @@ class TransactionSql extends BaseModelSql
 
     public function createTransactionFromInputArray(array $input) {
         $insertArray = array(
-            'amount' => $input['amount'],
+            'amount' => 100,
             'faces_id' => $input['faces_id']
         );
 
