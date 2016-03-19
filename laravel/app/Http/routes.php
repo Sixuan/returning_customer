@@ -41,6 +41,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('transactions', 'TransactionController@store');
 
     Route::post('members', 'MemberController@store');
+    Route::put('members/{id}', 'MemberController@update');
     Route::get('members/{id}', 'MemberController@get');
 
     Route::post('admin/sales', 'SaleController@store');

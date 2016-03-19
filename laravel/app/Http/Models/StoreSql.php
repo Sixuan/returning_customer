@@ -84,6 +84,7 @@ class StoreSql extends BaseModelSql
                       p.persons_id,
                       m.name,
                       i.img_path,
+                      m.vip,
                       m.timestamp
                 from faces f
                 join images i on (i.faces_id = f.faces_id)
@@ -99,6 +100,7 @@ class StoreSql extends BaseModelSql
             $personsRe[] = array(
                 'persons_id' => $person->persons_id,
                 'name' => $person->name,
+                'vip' => $person->vip,
                 'visit_count' => $person->visit_count,
                 'total_purchase' => $person->total_amount,
                 'time_registered' => $person->timestamp,
