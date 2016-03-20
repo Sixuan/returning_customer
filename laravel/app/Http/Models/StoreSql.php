@@ -90,7 +90,6 @@ class StoreSql extends BaseModelSql
                       p.name,
                       i.img_path,
                       p.vip,
-                      f.
                       p.timestamp
                 from faces f
                 join images i on (i.faces_id = f.faces_id)
