@@ -29,7 +29,8 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('stores/login', 'StoreController@login'); //@todo, move this to Auth
 
     Route::get('persons/{id}', 'PersonController@get');
-    Route::put('persons/{id}', 'PersonController@update');
+    Route::get('persons/multi/{id}', 'PersonController@getMulti');
+    Route::put('persons/{id}', 'MemberController@update');
     Route::post('persons', 'PersonController@store');
 
     Route::get('images/{id}', 'ImageController@get');
@@ -52,6 +53,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::put('admin/persons/{id}', 'MemberController@update');
     Route::get('admin/stores/{id}/persons', 'StoreController@persons');
     Route::get('admin/stores/{id}/sales', 'StoreController@sales');
+    Route::get('admin/stores/{id}/visitsAndTrans', 'StoreController@visitsAndTrans');
 //    Route::get('admin/stores/{id}/sales', 'ImageController@update'); //@todo get accounts
 //    Route::post('admin/stores/{id}/sales', 'ImageController@update'); //@todo create account
 

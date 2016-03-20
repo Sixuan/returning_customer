@@ -27,6 +27,11 @@ class StoreSql extends BaseModelSql
         return self::$storeSqlSingleton;
     }
 
+    public function updateStore(array $input, $id) {
+        $exist = $this->getConn()->table('stores')
+            ->where('stores_id', '=', $id);
+    }
+
     /**
      * @param $storeId
      * @return array
@@ -82,17 +87,17 @@ class StoreSql extends BaseModelSql
                       count(DISTINCT(f.faces_id)) as visit_count,
                       sum(t.amount) as total_amount,
                       p.persons_id,
-                      m.name,
+                      p.name,
                       i.img_path,
-                      m.vip,
-                      m.timestamp
+                      p.vip,
+                      f.
+                      p.timestamp
                 from faces f
                 join images i on (i.faces_id = f.faces_id)
                 join persons p on (f.persons_id = p.persons_id)
-                left join members m on (m.persons_id = p.persons_id)
                 left join transactions t on (t.faces_id = f.faces_id)
                 where f.faces_id in ("'.implode('","', $faces).'")
-                group by p.persons_id'));
+                group by p.persons_id order by f.t'));
 
         $personsRe = [];
 
@@ -137,11 +142,10 @@ class StoreSql extends BaseModelSql
                 f.faces_id,
                 f.cameras_id,
                 f.persons_id,
-                m.name,
+                p.name,
                 f.possible_returning_customers
             from faces f
             left join persons p on (f.persons_id = p.persons_id)
-            left join members m on (p.persons_id = m.persons_id)
             join cameras c on (f.cameras_id = c.cameras_id )
             join stores s on (c.stores_id = s.stores_id)
             join images i on (i.faces_id = f.faces_id)

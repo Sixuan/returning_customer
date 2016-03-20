@@ -25,7 +25,7 @@ class MemberController extends Controller
     {
         $input = $request->input();
         try{
-            $person = PersonSql::getInstance()->createOrUpdateMemberForPerson($input, $id);
+            $person = PersonSql::getInstance()->updateMember($input, $id);
             $content = [
                 'person' => $person
             ];
@@ -42,6 +42,7 @@ class MemberController extends Controller
 
     /**
      * @param  string  $id
+     * @deprecated
      * @return Response
      */
     public function get($id)

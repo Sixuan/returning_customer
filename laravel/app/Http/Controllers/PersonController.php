@@ -17,15 +17,28 @@ class PersonController extends Controller
 {
 
     /**
-     *
+     * we do not need to update person, should use update member
      * @param  Request  $request
+     * @deprecated
      * @param  string  $id
      * @return Response
      */
     public function update(Request $request, $id)
     {
-        echo "update".$id;
-        var_dump($request->input());
+        $input = $request->input();
+        try{
+            $person = PersonSql::getInstance()->createOrUpdatePerson($input, $id);
+            $content = [
+                'person' => $person
+            ];
+            return self::buildResponse($content, self::SUCCESS_CODE);
+
+        }catch (\Exception $e) {
+            $content = array(
+                'error' => (string)$e
+            );
+            return self::buildResponse($content, self::BAD_REQUEST);
+        }
     }
 
 
@@ -47,7 +60,21 @@ class PersonController extends Controller
         }
     }
 
+    public function getMulti($ids) {
+        try{
+            $content = PersonSql::getInstance()->getPersons($ids);
+            return self::buildResponse(['persons' => $content], self::SUCCESS_CODE);
+        }catch (\Exception $e) {
+            $content = array(
+                'error' => (string)$e
+            );
+            return self::buildResponse($content, self::BAD_REQUEST);
+        }
+
+    }
+
     /**
+     * Create person without info
      * @param Request $request
      * @return Response
      */

@@ -36,92 +36,78 @@ class PersonSql extends BaseModelSql
 
     }
 
-    public function createOrUpdateMemberForPerson(array $input, $personId) {
+    public function createPersonFromInputArray(array $input) {
 
-        $exist = $this->getConn()->table('members')
-            ->where('persons_id', '=', $personId)
-            ->exists();
+        $id = $this->getConn()->table('persons')
+            ->insertGetId($input);
 
-        if($exist == true) {
+        return (array)$this->getConn()->table('persons')
+            ->where('persons_id', '=', $id)
+            ->first();
+    }
 
-            if(isset($input['phone_number'])){
-                $updateArray['phone'] = $input['phone_number'];
-            }
+    public function updateMember(array $input, $personId) {
 
-            if(isset($input['vip'])){
-                $updateArray['vip'] = $input['vip'];
-            }
-
-            if(isset($input['name'])){
-                $updateArray['name'] = $input['name'];
-            }
-
-            if(isset($input['email'])){
-                $updateArray['email'] = $input['email'];
-            }
-
-            if(isset($input['address'])){
-                $updateArray['address'] = $input['address'];
-            }
-            if(!empty($updateArray)) {
-                $this->getConn()->table('members')
-                    ->where('persons_id', '=', $personId)
-                    ->update($updateArray);
-            }
-        }else{
-            if(isset($input['phone_number'])){
-                $insertArray['phone'] = $input['phone_number'];
-            }
-
-            if(isset($input['vip'])){
-                $insertArray['vip'] = $input['vip'];
-            }
-
-            if(isset($input['name'])){
-                $insertArray['name'] = $input['name'];
-            }
-
-            if(isset($input['email'])){
-                $insertArray['email'] = $input['email'];
-            }
-
-            if(isset($input['address'])){
-                $insertArray['address'] = $input['address'];
-            }
-            if(!empty($insertArray)) {
-                $this->getConn()->table('members')
-                    ->insertGetId($insertArray);
-            }
-
+        if(isset($input['phone'])){
+            $updateArray['phone'] = $input['phone'];
         }
+
+        if(isset($input['vip'])){
+            $updateArray['vip'] = $input['vip'];
+        }
+
+        if(isset($input['name'])){
+            $updateArray['name'] = $input['name'];
+        }
+
+        if(isset($input['email'])){
+            $updateArray['email'] = $input['email'];
+        }
+
+        if(isset($input['address'])){
+            $updateArray['address'] = $input['address'];
+        }
+
+        if(!empty($updateArray)) {
+            $this->getConn()->table('persons')
+                ->where('persons_id', '=', $personId)
+                ->update($updateArray);
+        }
+
 
         $person = $this->getConn()->table('persons as p')
             ->join('faces as f', 'p.persons_id', '=', 'f.persons_id')
             ->join('images as i', 'i.faces_id', '=', 'f.faces_id')
-            ->leftJoin('members as m', 'm.persons_id', '=', 'p.persons_id')
             ->where('p.persons_id', '=', $personId)
             ->first([
                 'p.age',
                 'p.gender',
                 'i.img_path',
-                'm.phone',
-                'm.vip',
-                'm.name',
-                'm.email',
-                'm.address'
+                'p.phone',
+                'p.vip',
+                'p.name',
+                'p.email',
+                'p.address'
             ]);
 
         return (array)$person;
 
     }
 
-    public function getMember($memberId) {
-        $member = $this->getConn()->table('members as m')
-            ->join('persons as p', 'm.persons_id', '=', 'p.persons_id')
-            ->where('m.members_id', '=', $memberId)
+    public function getMember($personId) {
+        $person = $this->getConn()->table('persons')
+            ->where('persons_id', '=', $personId)
             ->first();
 
-        return (array)$member;
+        return (array)$person;
+    }
+
+    public function getPersons($personIds) {
+        $personsInfo = $this->getConn()->table('persons as p')
+            ->whereIn('p.persons_id', explode(',', $personIds))
+            ->get(['p.name', 'p.persons_id']);
+
+        return (array)$personsInfo;
     }
 
     public function getPerson($personId) {
@@ -129,17 +115,17 @@ class PersonSql extends BaseModelSql
         $person = $this->getConn()->table('persons as p')
             ->join('faces as f', 'p.persons_id', '=', 'f.persons_id')
             ->join('images as i', 'i.faces_id', '=', 'f.faces_id')
-            ->leftJoin('members as m', 'm.persons_id', '=', 'p.persons_id')
             ->where('p.persons_id', '=', $personId)
             ->first([
                 'p.age',
                 'p.gender',
                 'i.img_path',
-                'm.phone',
-                'm.vip',
-                'm.name',
-                'm.email',
-                'm.address'
+                'p.phone',
+                'p.vip',
+                'p.name',
+                'p.email',
+                'p.address',
+                \DB::raw('IF(p.time_joined IS NULL, "N", "Y") as isMember')
             ]);
 
         $visitsAndTrans = $this->getConn()->table('faces as f')
@@ -184,63 +170,49 @@ class PersonSql extends BaseModelSql
         $personId = $personId[0];
 
         $this->getConn()->beginTransaction();
-
+        //if person existing
         if(!empty($personId)){
-
-            $memberExist = $this->getConn()->table('members')
-                ->where('persons_id', '=', $personId)
-                ->exists();
-
-            if($memberExist) {
-                throw new MemberExistingException("Member exist with this face ".$faceId,
-                    'member_existing', array());
-            }
-
+            $updateArray = [];
             if(isset($input['phone_number'])){
-                $insertArray['phone'] = $input['phone_number'];
+                $updateArray['phone'] = $input['phone_number'];
             }
 
             if(isset($input['vip'])){
-                $insertArray['vip'] = $input['vip'];
+                $updateArray['vip'] = $input['vip'];
             }
 
             if(isset($input['name'])){
-                $insertArray['name'] = $input['name'];
+                $updateArray['name'] = $input['name'];
             }
 
             if(isset($input['email'])){
-                $insertArray['email'] = $input['email'];
+                $updateArray['email'] = $input['email'];
             }
 
             if(isset($input['address'])){
-                $insertArray['address'] = $input['address'];
+                $updateArray['address'] = $input['address'];
             }
 
-            $insertArray['persons_id'] = $personId;
+            if(sizeof($updateArray) > 0){
+                $this->getConn()->table('persons')
+                    ->where('persons_id', '=', $personId)
+                    ->update($updateArray);
+            }
+            //insert person(member)
 
-            $memberId = $this->getConn()->table('members')
-                ->insertGetId($insertArray);
-            //insert member
         }else{
 
-            $personInsertArray = [];
+            $insertArray = [
+                'time_joined' => \DB::raw("now()")
+            ];
 
             if(isset($input['age'])){
-                $personInsertArray['age'] = $input['age'];
+                $insertArray['age'] = $input['age'];
             }
 
             if(isset($input['gender'])){
-                $personInsertArray['gender'] = $input['gender'];
+                $insertArray['gender'] = $input['gender'];
             }
-
-            $personId = $this->getConn()->table('persons')
-                ->insertGetId($personInsertArray);
-
-
-            $this->getConn()->table('faces')
-                ->where('faces_id', '=', $faceId)
-                ->update(['persons_id' => $personId]);
-
 
             if(isset($input['phone'])){
                 $insertArray['phone'] = $input['phone'];
@@ -262,20 +234,22 @@ class PersonSql extends BaseModelSql
                 $insertArray['address'] = $input['address'];
             }
 
-            $insertArray['persons_id'] = $personId;;
-
-            $memberId = $this->getConn()->table('members')
+            $personId = $this->getConn()->table('persons')
                 ->insertGetId($insertArray);
+
+
+            $this->getConn()->table('faces')
+                ->where('faces_id', '=', $faceId)
+                ->update(['persons_id' => $personId]);
 
         }
 
         $this->getConn()->commit();
-        $member = $this->getConn()->table('members as m')
-            ->join('persons as p', 'm.persons_id', '=', 'p.persons_id')
-            ->where('m.members_id', '=', $memberId)
+        $person = $this->getConn()->table('persons')
+            ->where('persons_id', '=', $personId)
             ->first();
 
-        return (array)$member;
+        return (array)$person;
     }
 
 }
