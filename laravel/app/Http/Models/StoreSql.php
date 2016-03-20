@@ -97,7 +97,7 @@ class StoreSql extends BaseModelSql
                 join persons p on (f.persons_id = p.persons_id)
                 left join transactions t on (t.faces_id = f.faces_id)
                 where f.faces_id in ("'.implode('","', $faces).'")
-                group by p.persons_id order by f.t'));
+                group by p.persons_id'));
 
         $personsRe = [];
 
