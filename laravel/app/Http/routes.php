@@ -45,15 +45,20 @@ Route::group(['prefix' => 'api'], function () {
     Route::put('members/{id}', 'MemberController@update');
     Route::get('members/{id}', 'MemberController@get');
 
-    Route::post('admin/sales', 'SaleController@store');
-    Route::delete('admin/sales/{id}', 'SaleController@destroy');
-    Route::put('admin/sales/{id}', 'SaleController@update');
+//    Route::post('admin/sales', 'SaleController@store');
 
 
     Route::put('admin/persons/{id}', 'MemberController@update');
     Route::get('admin/stores/{id}/persons', 'StoreController@persons');
-    Route::get('admin/stores/{id}/sales', 'StoreController@sales');
     Route::get('admin/stores/{id}/visitsAndTrans', 'StoreController@visitsAndTrans');
+    Route::post('admin/stores/{id}/sales', 'SaleController@store');
+    Route::get('admin/stores/{id}/sales', 'SaleController@sales');
+
+    Route::delete('admin/sales/{id}', 'SaleController@destroy');
+    Route::put('admin/sales/{id}', 'SaleController@update');
+
+    Route::put('admin/cameras/{id}', 'StoreController@updateRtsp');
+
 //    Route::get('admin/stores/{id}/sales', 'ImageController@update'); //@todo get accounts
 //    Route::post('admin/stores/{id}/sales', 'ImageController@update'); //@todo create account
 

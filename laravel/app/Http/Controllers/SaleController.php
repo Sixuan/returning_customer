@@ -14,16 +14,17 @@ use App\Http\Models\PersonSql;
 
 class SaleController extends Controller
 {
+
+
     /**
-     * Create sales account
-     * @param Request $request
+     * Load store sales
+     * @param $storeId
      * @return Response
      */
-    public function store(Request $request) {
-        $input = $request->input();
+    public function sales($storeId) {
         try{
-            //$sale = PersonSql::getInstance()->createSaleInputArray($input);
-            return self::buildResponse(['sale' => $input], self::SUCCESS_CODE);
+            $sales = PersonSql::getInstance()->getStoreSales($storeId);
+            return self::buildResponse(['sales' => $sales], self::SUCCESS_CODE);
 
         }catch (\Exception $e) {
             $content = array(
@@ -33,8 +34,46 @@ class SaleController extends Controller
         }
     }
 
-    public function destroy($id) {
-        return self::buildSuccessResponse();
+    /**
+     * @param $storeId
+     * @param Request $request
+     * @return Response
+     */
+    public function store($storeId, Request $request) {
+        /**
+         * {
+        "name" : "L B",
+        "phone" : "1232222222",
+        "age" : 20,
+        "email" : "123@d.com",
+        "address" : "九龙"
+        }
+
+         */
+        $input = $request->input();
+        try{
+            $sale = PersonSql::getInstance()->createSaleInputArray($storeId, $input);
+            return self::buildResponse(['sale' => $sale], self::SUCCESS_CODE);
+
+        }catch (\Exception $e) {
+            $content = array(
+                'error' => (string)$e
+            );
+            return self::buildResponse($content, self::BAD_REQUEST);
+        }
+    }
+
+    public function destroy($saleId) {
+        try{
+            PersonSql::getInstance()->deleteSale($saleId);
+            return self::buildSuccessResponse();
+
+        }catch (\Exception $e) {
+            $content = array(
+                'error' => (string)$e
+            );
+            return self::buildResponse($content, self::BAD_REQUEST);
+        }
     }
 
     /**
@@ -48,10 +87,11 @@ class SaleController extends Controller
         $input = $request->input();
         try{
             $sale = PersonSql::getInstance()->updateSaleInfo($input, $id);
-            return self::buildSuccessResponse();
+            return self::buildResponse(['sale' => $sale], self::SUCCESS_CODE);
 
         }catch (\Exception $e) {
             $content = array(
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);

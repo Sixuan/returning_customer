@@ -15,6 +15,20 @@ use Illuminate\Http\Response;
 
 class StoreController extends Controller
 {
+
+    public function updateRtsp(Request $request, $id){
+        $input = $request->input();
+        try{
+            $camera = StoreSql::getInstance()->updateCamera($input, $id);
+            $content ['camera'] = $camera;
+            return self::buildResponse($content, self::SUCCESS_CODE);
+        }catch (\Exception $e) {
+            $content = array(
+                'error' => (string)$e
+            );
+            return self::buildResponse($content, self::BAD_REQUEST);
+        }
+    }
     /**
      *
      * @param  Request  $request
@@ -82,6 +96,15 @@ class StoreController extends Controller
             'count' => [
                 'female' => 100,
                 'male' => 20
+            ],
+            'gender' => [
+                '10' => 0,
+                '20' => 50,
+                '30' => 30,
+                '40' => 25,
+                '50' => 21,
+                '60' => 10,
+                '60 +' => 5
             ],
             'visit' => [
                 'year_breakdown' => [
@@ -151,31 +174,6 @@ class StoreController extends Controller
 
         return self::buildResponse($content, self::SUCCESS_CODE);
 
-    }
-
-    /**
-     * Load store sales
-     * @param $id
-     * @return Response
-     */
-    public function sales($id) {
-        $sales[] = [
-            'sales_id' => 1,
-            'name' => 'Sixuan Liu',
-            'login_username' => 'sliu',
-            'manager' => 'Y'
-        ];
-
-        $sales[] = [
-            'sales_id' => 2,
-            'name' => 'Heo Neu',
-            'login_username' => 'hneu',
-            'manager' => 'N'
-        ];
-        $content = [
-            'sales' => $sales
-        ];
-        return self::buildResponse($content, self::SUCCESS_CODE);
     }
 
     /**

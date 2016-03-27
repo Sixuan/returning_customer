@@ -9,6 +9,8 @@
 namespace App\Http\Models;
 
 
+use App\Exceptions\ApiInputException;
+
 class StoreSql extends BaseModelSql
 {
 
@@ -30,6 +32,23 @@ class StoreSql extends BaseModelSql
     public function updateStore(array $input, $id) {
         $exist = $this->getConn()->table('stores')
             ->where('stores_id', '=', $id);
+    }
+
+    public function updateCamera(array $input, $cameraId) {
+        if(!isset($input['rtsp_url'])) {
+            throw new ApiInputException("rtsp_url is missing from input");
+        }
+
+        $this->getConn()->table('cameras')
+            ->where('cameras_id', '=', $cameraId)
+            ->update([
+                'rtsp_url' => $input['rtsp_url']
+            ]);
+
+        return (array)$this->getConn()->table('cameras')
+            ->where('cameras_id','=', $cameraId)
+            ->first();
+
     }
 
     /**

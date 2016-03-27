@@ -9,7 +9,8 @@
 namespace App\Http\Models;
 
 
-use App\Exceptions\MemberExistingException;
+use App\Exceptions\AuthException;
+use App\Exceptions\BadRequestException;
 
 class PersonSql extends BaseModelSql
 {
@@ -28,14 +29,121 @@ class PersonSql extends BaseModelSql
         return self::$personSqlSingleton;
     }
 
-    public function createSaleInputArray(array $input) {
+    public function createSaleInputArray($storeId, array $input) {
+        /**
+         * {
+        "name" : "L B",
+        "phone" : "1232222222",
+        "dob" : "1985-12-12"
+        "email" : "123@d.com",
+        "password" : 123456
+        "address" : "九龙"
+        }
+
+         */
+
+        if(!isset($input['name']) || !isset($input['password'])) {
+            throw new BadRequestException("name and password required", 'bad_request');
+        }
+
+        $input['password'] = md5($input['password']);
+        $input['stores_id'] = $storeId;
+
+        $id = $this->getConn()->table('sales')
+            ->insertGetId($input);
+
+        return (array)$this->getConn()->table('sales')
+            ->where('sales_id', '=', $id)
+            ->first([
+                'name',
+                'dob',
+                'email',
+                'phone',
+                'address'
+            ]);
+    }
+
+    /**
+     * @param $saleId
+     * @param $password
+     * @throws AuthException
+     */
+    public function validatePasswordForSale($saleId, $password) {
+        $sale = $this->getConn()->table('sales')
+            ->where('sales_id', '=', $saleId)
+            ->where('password', '=', md5($password))
+            ->exists();
+
+        if(!$sale){
+            throw new AuthException("Wrong password provided.");
+        }
+    }
+
+    /**
+     * @param array $input
+     * @param $saleId
+     * @return array
+     * @throws AuthException
+     * @throws BadRequestException
+     */
+    public function updateSaleInfo(array $input, $saleId) {
+
+        if(!isset($input['original_password']) || !isset($input['password'])){
+            throw new BadRequestException("original_password and password required", 'bad_request');
+        }
+
+        $pass = $input['original_password'];
+        $this->validatePasswordForSale($saleId, $pass);
+
+        if(isset($input['password'])) {
+            $updateArray['password'] = md5($input['password']);
+            $this->getConn()->table('sales')
+                ->where('sales_id', '=', $saleId)
+                ->update($updateArray);
+        }
+
+        return (array)$this->getConn()->table('sales')
+            ->where('sales_id', '=', $saleId)
+            ->first([
+                'name',
+                'dob',
+                'email',
+                'phone',
+                'address'
+            ]);
+    }
+
+    /**
+     * @param $saleId
+     */
+    public function deleteSale($saleId) {
+        $this->getConn()->table('sales')
+            ->where('sales_id', '=', $saleId)
+            ->delete();
+    }
+
+    /**
+     * @param $storeId
+     * @return array
+     */
+    public function getStoreSales($storeId) {
+
+        $sales = (array)$this->getConn()->table('sales')
+            ->where('stores_id','=', $storeId)
+            ->get([
+                'sales_id',
+                'name as login_username',
+                'manager',
+            ]);
+
+        return $sales;
 
     }
 
-    public function updateSaleInfo(array $input, $id) {
-
-    }
-
+    /**
+     * @param array $input
+     * @return array
+     */
     public function createPersonFromInputArray(array $input) {
 
         $id = $this->getConn()->table('persons')
@@ -46,6 +154,11 @@ class PersonSql extends BaseModelSql
             ->first();
     }
 
+    /**
+     * @param array $input
+     * @param $personId
+     * @return array
+     */
     public function updateMember(array $input, $personId) {
 
         if(isset($input['phone'])){
@@ -67,6 +180,11 @@ class PersonSql extends BaseModelSql
         if(isset($input['address'])){
             $updateArray['address'] = $input['address'];
         }
+
+        if(isset($input['age'])){
+            $updateArray['age'] = $input['age'];
+        }
+
 
         if(!empty($updateArray)) {
             $this->getConn()->table('persons')
@@ -94,6 +212,10 @@ class PersonSql extends BaseModelSql
 
     }
 
+    /**
+     * @param $personId
+     * @return array
+     */
     public function getMember($personId) {
         $person = $this->getConn()->table('persons')
             ->where('persons_id', '=', $personId)
