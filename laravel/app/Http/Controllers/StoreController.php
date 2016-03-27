@@ -24,6 +24,7 @@ class StoreController extends Controller
             return self::buildResponse($content, self::SUCCESS_CODE);
         }catch (\Exception $e) {
             $content = array(
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
@@ -44,6 +45,7 @@ class StoreController extends Controller
             return self::buildResponse($content, self::SUCCESS_CODE);
         }catch (\Exception $e) {
             $content = array(
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
@@ -85,6 +87,7 @@ class StoreController extends Controller
             return self::buildResponse($content, self::SUCCESS_CODE);
         }catch (\Exception $e) {
             $content = array(
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
