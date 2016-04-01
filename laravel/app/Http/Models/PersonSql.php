@@ -59,7 +59,8 @@ class PersonSql extends BaseModelSql
                 'dob',
                 'email',
                 'phone',
-                'address'
+                'address',
+                "manager"
             ]);
     }
 
