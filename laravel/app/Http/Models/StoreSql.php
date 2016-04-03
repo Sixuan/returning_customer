@@ -10,6 +10,7 @@ namespace App\Http\Models;
 
 
 use App\Exceptions\ApiInputException;
+use App\Exceptions\AuthException;
 
 class StoreSql extends BaseModelSql
 {
@@ -27,6 +28,31 @@ class StoreSql extends BaseModelSql
             self::$storeSqlSingleton = new StoreSql();
         }
         return self::$storeSqlSingleton;
+    }
+
+    /**
+     * @param $token
+     * @return mixed
+     * @throws AuthException
+     */
+    public function retrieveStoreByToken($token) {
+        $token = $this->getConn()->table('sales as s')
+            ->join('stores as st', 's.stores_id', '=', 'st.stores_id')
+            ->where('s.remember_token', '=', $token)
+            ->where('s.updated_at', '>', \DB::raw("DATE(NOW() - INTERVAL 2 DAY)"))
+            ->pluck('s.stores_id');
+        if(isset($token[0])) {
+            return $token[0];
+        }else{
+            throw new AuthException("Token expired or invalid.");
+        }
+    }
+
+    public function isTokenValid($token) {
+        return $this->getConn()->table('sales')
+            ->where('remember_token', '=', $token)
+            ->where('updated_at', '>', \DB::raw("DATE(NOW() - INTERVAL 2 DAY)"))
+            ->exists();
     }
 
     public function updateStore(array $input, $id) {

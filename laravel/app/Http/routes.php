@@ -17,6 +17,7 @@ Route::get('/', function () {
 
 
 Route::group(['prefix' => 'api'], function () {
+
     Route::get('faces/{id}', 'FaceController@get');
     Route::put('faces/{id}', 'FaceController@update');
     Route::post('faces', 'FaceController@store');
@@ -47,10 +48,7 @@ Route::group(['prefix' => 'api'], function () {
 
 //    Route::post('admin/sales', 'SaleController@store');
 
-
     Route::put('admin/persons/{id}', 'MemberController@update');
-    Route::get('admin/stores/{id}/persons', 'StoreController@persons');
-    Route::get('admin/stores/{id}/visitsAndTrans', 'StoreController@visitsAndTrans');
     //Create sale account
     Route::post('admin/stores/{id}/sales', 'AccountController@create');
     Route::get('admin/stores/{id}/sales', 'SaleController@sales');
@@ -65,6 +63,11 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::post('auth/{storeId}', 'AccountController@create');
 
+    Route::group(['middleware' => ['storeAuth']], function () {
+        Route::get('admin/stores/{id}/persons', 'StoreController@persons');
+        Route::get('admin/stores/{id}/visitsAndTrans', 'StoreController@visitsAndTrans');
+    });
+
 });
 
 /*
@@ -78,7 +81,6 @@ Route::group(['prefix' => 'api'], function () {
 |
 */
 
-Route::group(['middleware' => ['web']], function () {
-
+Route::group(['middleware' => ['storeAuth']], function () {
 });
 
