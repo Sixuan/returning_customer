@@ -29,6 +29,58 @@ class PersonSql extends BaseModelSql
         return self::$personSqlSingleton;
     }
 
+    /**
+     * @param array $input
+     * @return array
+     * @throws AuthException
+     * @throws BadRequestException
+     */
+    public function authenticateSale(array $input) {
+
+        if(!isset($input['username']) || !isset($input['password'])) {
+            throw new BadRequestException("username and password required", 'bad_request');
+        }
+
+        $exist = $this->getConn()->table('sales')
+            ->where('name','=', trim($input['username']))
+            ->where('password', '=', md5($input['password']));
+
+        if(isset($input['manager']) && $input['Y']) {
+            $exist->where('manager', '=', 'Y');
+        }
+
+        $exist = $exist->exists();
+
+
+        if($exist){
+            $token = md5(time());
+            $updateArray = [
+                'remember_token' => $token,
+                'updated_at' => \DB::raw("now()")
+            ];
+
+            $this->getConn()->table('sales')
+                ->where('name','=', $input['username'])
+                ->update($updateArray);
+
+
+            return (array)$this->getConn()->table('sales as s')
+                ->join('stores as st', 's.stores_id', '=', 'st.stores_id')
+                ->where('s.name','=', $input['username'])
+                ->first([
+                    'st.stores_id',
+                    's.name',
+                    's.remember_token',
+                    's.sales_id',
+                    's.manager'
+                ]);
+
+        }else{
+            throw new AuthException("user bad credential or account not existing");
+        }
+    }
+
+
     public function createSaleInputArray($storeId, array $input) {
         /**
          * {
@@ -46,8 +98,20 @@ class PersonSql extends BaseModelSql
             throw new BadRequestException("name and password required", 'bad_request');
         }
 
+        $exist = $this->getConn()->table('sales')
+            ->where('name','=', trim($input['name']))
+            ->exists();
+
+        if($exist){
+            throw new BadRequestException("name already existed", 'bad_request');
+        }
+
         $input['password'] = md5($input['password']);
         $input['stores_id'] = $storeId;
+
+        $token = md5(time());
+        $input['remember_token'] = $token;
+        $input['created_at'] = $input['updated_at'] = \DB::raw("now()");
 
         $id = $this->getConn()->table('sales')
             ->insertGetId($input);
@@ -60,7 +124,8 @@ class PersonSql extends BaseModelSql
                 'email',
                 'phone',
                 'address',
-                "manager"
+                'manager',
+                'remember_token'
             ]);
     }
 

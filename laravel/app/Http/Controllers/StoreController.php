@@ -52,6 +52,11 @@ class StoreController extends Controller
         }
     }
 
+    /**
+     * @deprecated
+     * @param Request $request
+     * @return Response
+     */
     public function login(Request $request) {
 
         $content = array(

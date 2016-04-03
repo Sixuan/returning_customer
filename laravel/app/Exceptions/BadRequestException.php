@@ -21,7 +21,7 @@ class BadRequestException extends \Exception
     protected $statusCode;
 
     public function __construct($message, $status_code = 'bad_request',
-                                array $context, $code = 0, \Exception $previous = null)
+                                $context = [], $code = 0, \Exception $previous = null)
     {
         $this->context = $context;
         $this->statusCode = $status_code;
