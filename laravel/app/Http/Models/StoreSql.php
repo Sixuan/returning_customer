@@ -77,6 +77,42 @@ class StoreSql extends BaseModelSql
 
     }
 
+    public function getAllStores() {
+
+        $infos = $this->getConn()->table('stores as s')
+            ->leftJoin('cameras as c', 's.stores_id', '=', 'c.stores_id')
+            ->where('s.active', '=', 'Y')
+            ->get(['s.stores_id', 's.name', 'c.position', 'c.cameras_id', 'c.rtsp_url']);
+
+        $stores = [];
+        foreach($infos as $info) {
+            $store = [];
+            if(isset($stores[$info->stores_id])) {
+                if($info->cameras_id != null) {
+                    $stores[$info->stores_id]['cameras'][] = array(
+                        'cameras_id' => $info->cameras_id,
+                        'rtsp_url' => $info->rtsp_url,
+                        'position' => $info->position
+                    );
+                }
+
+            } else {
+                $store['name'] = $info->name;
+                $store['stores_id'] = $info->stores_id;
+                if($info->cameras_id != null) {
+                    $store['cameras'][] = array(
+                        'cameras_id' => $info->cameras_id,
+                        'rtsp_url' => $info->rtsp_url,
+                        'position' => $info->position
+                    );
+                }
+
+                $stores[$info->stores_id] = $store;
+            }
+        }
+
+        return array_values($stores);
+    }
     /**
      * @param $storeId
      * @return array
@@ -231,8 +267,21 @@ class StoreSql extends BaseModelSql
     }
 
     public function addCameraToStore(array $input, $storeId) {
-        $input['stores_id'] = $storeId;
-        $this->getConn()->table('cameras')
-            ->insert($input);
+        $position = $input['position'];
+        $exist = $this->getConn()->table('cameras')
+            ->where('position', '=', $position)
+            ->where('stores_id', '=', $storeId)
+            ->exists();
+
+        if($exist) {
+            $this->getConn()->table('cameras')
+                ->where('position', '=', $position)
+                ->where('stores_id', '=', $storeId)
+                ->update($input);
+        }else{
+            $input['stores_id'] = $storeId;
+            $this->getConn()->table('cameras')
+                ->insert($input);
+        }
     }
 }

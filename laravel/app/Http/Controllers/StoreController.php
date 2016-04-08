@@ -16,6 +16,20 @@ use Illuminate\Http\Response;
 class StoreController extends Controller
 {
 
+    public function all() {
+        try{
+            $stores = StoreSql::getInstance()->getAllStores();
+            $content ['stores'] = $stores;
+            return self::buildResponse($content, self::SUCCESS_CODE);
+        }catch (\Exception $e) {
+            $content = array(
+                'message' => $e->getMessage(),
+                'error' => (string)$e
+            );
+            return self::buildResponse($content, self::BAD_REQUEST);
+        }
+    }
+
     public function updateRtsp(Request $request, $id){
         $input = $request->input();
         try{

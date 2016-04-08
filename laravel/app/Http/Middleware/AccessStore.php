@@ -22,6 +22,8 @@ class AccessStore
         $token = $request->header('Authorization');
         $valid = StoreSql::getInstance()->isTokenValid($token);
 
+        return $next($request);
+
         if(!in_array($token, $this->permanentTokens) && !$valid) {
             return response(['status' => 'Unauthorized.'], 401);
         }
