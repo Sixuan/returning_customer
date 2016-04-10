@@ -45,7 +45,7 @@ class PersonSql extends BaseModelSql
             ->where('name','=', trim($input['username']))
             ->where('password', '=', md5($input['password']));
 
-        if(isset($input['manager']) && $input['Y']) {
+        if(isset($input['manager']) && $input['manager'] == 'Y') {
             $exist->where('manager', '=', 'Y');
         }
 
