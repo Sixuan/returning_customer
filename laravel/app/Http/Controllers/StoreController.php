@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Models\StoreSql;
+use App\Http\Requests\FormPostRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -66,33 +67,6 @@ class StoreController extends Controller
         }
     }
 
-    /**
-     * @deprecated
-     * @param Request $request
-     * @return Response
-     */
-    public function login(Request $request) {
-
-        $content = array(
-            'store' => array(
-                'stores_id' => 2
-            )
-        );
-
-        return self::buildResponse($content, self::SUCCESS_CODE);
-        //@todo
-        try{
-            $store = StoreSql::getInstance()->loginAndGetStore($input);
-            return self::buildResponse($store, self::SUCCESS_CODE);
-
-        }catch (\Exception $e) {
-            $content = array(
-                'error' => (string)$e
-            );
-            return self::buildResponse($content, self::BAD_REQUEST);
-        }
-
-    }
 
     /**
      * Get stores person
@@ -265,6 +239,23 @@ class StoreController extends Controller
 
         return self::buildSuccessResponse();
 
+    }
+
+    /**
+     * @param FormPostRequest $request
+     * @return Response
+     */
+    public function photo(FormPostRequest $request) {
+        $file = $request->file('image');
+        $extension = \File::extension($file->getClientOriginalName());
+        $name = time().'.'.$extension;
+        $path = "/tmp/tmpImages/";
+        $file->move($path, $name);
+        $content = [
+            'name' => $name,
+            'path' => $path
+        ];
+        return self::buildResponse($content, self::SUCCESS_CODE);
     }
 
 }

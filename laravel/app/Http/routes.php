@@ -32,6 +32,8 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::get('stores', 'StoreController@all');
 
+    Route::post('stores/photo', 'StoreController@photo');
+
 
 //    Route::get('admin/stores/{id}/sales', 'ImageController@update'); //@todo get accounts
 //    Route::post('admin/stores/{id}/sales', 'ImageController@update'); //@todo create account
