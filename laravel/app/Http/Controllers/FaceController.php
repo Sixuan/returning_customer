@@ -31,6 +31,7 @@ class FaceController extends Controller
         }catch (BadRequestException $e){
             $content = array(
                 'status' => $e->getStatusCode(),
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
@@ -38,6 +39,7 @@ class FaceController extends Controller
         }catch (\Exception $e) {
             $content = array(
                 'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
@@ -57,6 +59,8 @@ class FaceController extends Controller
             return self::buildResponse($content, self::SUCCESS_CODE);
         }catch (\Exception $e) {
             $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
@@ -75,6 +79,8 @@ class FaceController extends Controller
 
         }catch (\Exception $e) {
             $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);

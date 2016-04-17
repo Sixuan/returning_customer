@@ -38,6 +38,8 @@ class TransactionController extends Controller
             return self::buildResponse($content, self::SUCCESS_CODE);
         }catch (\Exception $e) {
             $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
@@ -55,10 +57,14 @@ class TransactionController extends Controller
             return self::buildResponse($tran, self::SUCCESS_CODE);
 
         }catch (\Exception $e) {
+
             $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
                 'input' => $input,
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
+
             return self::buildResponse($content, self::BAD_REQUEST);
         }
     }

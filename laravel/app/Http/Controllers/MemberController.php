@@ -33,6 +33,8 @@ class MemberController extends Controller
 
         }catch (\Exception $e) {
             $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
@@ -52,6 +54,8 @@ class MemberController extends Controller
             return self::buildResponse(['member' => $member], self::SUCCESS_CODE);
         }catch (\Exception $e) {
             $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
@@ -77,13 +81,16 @@ class MemberController extends Controller
 
         }catch (MemberExistingException $e){
             $content = array(
-                'status' => $e->getStatusCode(),
-                'messages' => [$e->getMessage()]
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'messages' => [$e->getMessage()],
+                'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
 
         }catch (\Exception $e) {
             $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'messages' => [$e->getMessage()],
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);

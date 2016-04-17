@@ -24,6 +24,7 @@ class StoreController extends Controller
             return self::buildResponse($content, self::SUCCESS_CODE);
         }catch (\Exception $e) {
             $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
                 'message' => $e->getMessage(),
                 'error' => (string)$e
             );
@@ -39,6 +40,7 @@ class StoreController extends Controller
             return self::buildResponse($content, self::SUCCESS_CODE);
         }catch (\Exception $e) {
             $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
                 'message' => $e->getMessage(),
                 'error' => (string)$e
             );
@@ -60,6 +62,7 @@ class StoreController extends Controller
             return self::buildResponse($content, self::SUCCESS_CODE);
         }catch (\Exception $e) {
             $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
                 'message' => $e->getMessage(),
                 'error' => (string)$e
             );
@@ -80,6 +83,7 @@ class StoreController extends Controller
             return self::buildResponse($content, self::SUCCESS_CODE);
         }catch (\Exception $e) {
             $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
                 'message' => $e->getMessage(),
                 'error' => (string)$e
             );
@@ -183,6 +187,8 @@ class StoreController extends Controller
             return self::buildResponse($content, self::SUCCESS_CODE);
         }catch (\Exception $e) {
             $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
@@ -203,6 +209,8 @@ class StoreController extends Controller
             return self::buildResponse($content, self::SUCCESS_CODE);
         }catch (\Exception $e) {
             $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
@@ -221,6 +229,8 @@ class StoreController extends Controller
 
         }catch (\Exception $e) {
             $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);

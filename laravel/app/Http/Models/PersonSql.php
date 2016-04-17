@@ -140,7 +140,7 @@ class PersonSql extends BaseModelSql
             ->exists();
 
         if(!$sale){
-            throw new NonExistingException("");
+            throw new NonExistingException("Sale id is invalid, can not find.", "sale_non_existing");
         }
     }
 

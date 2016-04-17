@@ -47,6 +47,7 @@ class AccountController extends Controller
         }catch (BadRequestException $e){
             $content = array(
                 'status' => $e->getStatusCode(),
+                'message' => $e->getMessage(),
                 'error' => $e->getMessage()
             );
             return self::buildResponse($content, self::BAD_REQUEST);
@@ -54,6 +55,7 @@ class AccountController extends Controller
         }catch (\Exception $e) {
             $content = array(
                 'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
@@ -76,13 +78,15 @@ class AccountController extends Controller
         }catch (BadRequestException $e){
             $content = array(
                 'status' => $e->getStatusCode(),
-                'error' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
 
         }catch (\Exception $e) {
             $content = array(
                 'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
