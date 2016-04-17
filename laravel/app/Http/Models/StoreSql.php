@@ -44,7 +44,7 @@ class StoreSql extends BaseModelSql
         if(isset($token[0])) {
             return $token[0];
         }else{
-            throw new AuthException("Token expired or invalid.");
+            throw new AuthException("Token expired or invalid.", "token_invalid_or_expired");
         }
     }
 

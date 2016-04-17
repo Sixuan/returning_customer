@@ -11,6 +11,7 @@ namespace App\Http\Models;
 
 use App\Exceptions\AuthException;
 use App\Exceptions\BadRequestException;
+use App\Exceptions\NonExistingException;
 
 class PersonSql extends BaseModelSql
 {
@@ -76,7 +77,7 @@ class PersonSql extends BaseModelSql
                 ]);
 
         }else{
-            throw new AuthException("user bad credential or account not existing");
+            throw new AuthException("user bad credential or account not existing", "bad_auth_or_account_non_existing");
         }
     }
 
@@ -131,6 +132,20 @@ class PersonSql extends BaseModelSql
 
     /**
      * @param $saleId
+     * @throws NonExistingException
+     */
+    public function validateSaleExisting($saleId) {
+        $sale = $this->getConn()->table('sales')
+            ->where('sales_id', '=', $saleId)
+            ->exists();
+
+        if(!$sale){
+            throw new NonExistingException("");
+        }
+    }
+
+    /**
+     * @param $saleId
      * @param $password
      * @throws AuthException
      */
@@ -141,7 +156,7 @@ class PersonSql extends BaseModelSql
             ->exists();
 
         if(!$sale){
-            throw new AuthException("Wrong password provided.");
+            throw new AuthException("Wrong password provided.", "wrong_password");
         }
     }
 
@@ -157,7 +172,7 @@ class PersonSql extends BaseModelSql
         if(!isset($input['original_password']) || !isset($input['password'])){
             throw new BadRequestException("original_password and password required", 'bad_request');
         }
-
+        $this->validateSaleExisting($saleId);
         $pass = $input['original_password'];
         $this->validatePasswordForSale($saleId, $pass);
 

@@ -8,6 +8,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\AuthException;
+use App\Exceptions\NonExistingException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Models\PersonSql;
@@ -85,9 +87,24 @@ class SaleController extends Controller
     public function update(Request $request, $id)
     {
         $input = $request->input();
-        try{
+        try {
             $sale = PersonSql::getInstance()->updateSaleInfo($input, $id);
             return self::buildResponse(['sale' => $sale], self::SUCCESS_CODE);
+        }catch (NonExistingException $e){
+            $content = array(
+                'status' => $e->getStatusCode(),
+                'message' => $e->getMessage(),
+                'error' => (string)$e
+            );
+            return self::buildResponse($content, self::BAD_REQUEST);
+
+        }catch (AuthException $e){
+            $content = array(
+                'status' => $e->getStatusCode(),
+                'message' => $e->getMessage(),
+                'error' => (string)$e
+            );
+            return self::buildResponse($content, self::BAD_REQUEST);
 
         }catch (\Exception $e) {
             $content = array(

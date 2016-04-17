@@ -2,14 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: sixuanliu
- * Date: 3/26/16
- * Time: 7:38 PM
+ * Date: 4/16/16
+ * Time: 8:39 PM
  */
 
 namespace App\Exceptions;
 
 
-class AuthException extends BadRequestException
+class NonExistingException extends BadRequestException
 {
 
 }

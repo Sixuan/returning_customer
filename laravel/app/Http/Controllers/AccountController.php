@@ -68,7 +68,8 @@ class AccountController extends Controller
         }catch (AuthException $e){
             $content = array(
                 'status' => 'bad_auth',
-                'error' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_AUTH);
 
