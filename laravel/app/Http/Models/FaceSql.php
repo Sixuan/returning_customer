@@ -9,6 +9,7 @@
 namespace App\Http\Models;
 
 use App\Exceptions\BadRequestException;
+use App\Exceptions\NonExistingException;
 
 class FaceSql extends BaseModelSql
 {
@@ -67,7 +68,9 @@ class FaceSql extends BaseModelSql
                 'f.faces_id',
                 'f.possible_returning_customers'
             ]);
-
+        if(empty($face)) {
+            throw new NonExistingException("Can not find face.", 'face_not_found');
+        }
         $json = json_decode($face['possible_returning_customers']);
         if(is_object($json)) {
             $face['possible_returning_customers'] = $json->possible_returning_customers;
