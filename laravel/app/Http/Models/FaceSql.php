@@ -66,21 +66,23 @@ class FaceSql extends BaseModelSql
                 'f.gender',
                 'f.cameras_id',
                 'f.faces_id',
+                'f.idFaces',
                 'f.possible_returning_customers'
             ]);
         if(empty($face)) {
             throw new NonExistingException("Can not find face.", 'face_not_found');
         }
-        $json = json_decode($face['possible_returning_customers']);
-        if(is_object($json)) {
-            $face['possible_returning_customers'] = $json->possible_returning_customers;
-        }
+
+        //print_r($face['possible_returning_customers']);
+        //$json = json_decode($face['possible_returning_customers']);
+        $face['possible_returning_customers'] = json_decode($face['possible_returning_customers']);
         return $face;
 
     }
 
     public function createFaceFromInputArray(array $input) {
 
+//        $input['possible_returning_customers'] = ' [{"person_id": "8", "confident_rate": "0.607237030375", "img_path": "/opt/WD_data/2/images36ce5f7c1a244971b25a22a14d1fcbcb.jpg"}, {"person_id": "8", "confident_rate": "0.607237030375", "img_path": "/opt/WD_data/2/images36ce5f7c1a244971b25a22a14d1fcbcb.jpg"}, {"person_id": "8", "confident_rate": "0.607237030375", "img_path": "/opt/WD_data/2/images36ce5f7c1a244971b25a22a14d1fcbcb.jpg"}]';
         $id = $this->getConn()->table('faces')
             ->insertGetId($input);
 

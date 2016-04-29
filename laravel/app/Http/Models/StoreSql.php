@@ -236,10 +236,7 @@ class StoreSql extends BaseModelSql
 
         $facesRe = array();
         foreach($faceData as $face) {
-            $json = json_decode($face->possible_returning_customers);
-            if (is_object($json)) {
-                $face->possible_returning_customers = $json->possible_returning_customers;
-            }
+            $face->possible_returning_customers = json_decode($face->possible_returning_customers);
             $facesRe[] = $face;
         }
 
