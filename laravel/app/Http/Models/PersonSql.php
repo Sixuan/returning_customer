@@ -371,11 +371,7 @@ class PersonSql extends BaseModelSql
         $personId = $this->getConn()->table('faces')
             ->where('faces_id', '=', $faceId)
             ->pluck('persons_id');
-
-        if(empty($personId)) {
-            throw new NonExistingException("Sale id is invalid, can not find.", "person_non_existing");
-        }
-
+        
         if(isset($personId[0])){
             $personId = $personId[0];
         }
