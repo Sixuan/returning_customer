@@ -82,7 +82,7 @@ class MemberController extends Controller
         }catch (MemberExistingException $e){
             $content = array(
                 'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
-                'messages' => [$e->getMessage()],
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);
@@ -90,7 +90,7 @@ class MemberController extends Controller
         }catch (\Exception $e) {
             $content = array(
                 'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
-                'messages' => [$e->getMessage()],
+                'message' => $e->getMessage(),
                 'error' => (string)$e
             );
             return self::buildResponse($content, self::BAD_REQUEST);

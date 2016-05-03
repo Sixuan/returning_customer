@@ -53,6 +53,10 @@ class TransactionController extends Controller
     public function store(Request $request) {
         $input = $request->input();
         try{
+            if(!isset($input['faces_id'])){
+                $content['messages'][] = 'faces_id required';
+                return self::buildResponse($content, self::BAD_REQUEST);
+            }
             $tran = TransactionSql::getInstance()->createTransactionFromInputArray($input);
             return self::buildResponse($tran, self::SUCCESS_CODE);
 
@@ -60,7 +64,6 @@ class TransactionController extends Controller
 
             $content = array(
                 'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
-                'input' => $input,
                 'message' => $e->getMessage(),
                 'error' => (string)$e
             );

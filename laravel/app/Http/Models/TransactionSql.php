@@ -9,6 +9,8 @@
 namespace App\Http\Models;
 
 
+use App\Exceptions\NonExistingException;
+
 class TransactionSql extends BaseModelSql
 {
     /**
@@ -44,6 +46,13 @@ class TransactionSql extends BaseModelSql
     }
 
     public function createTransactionFromInputArray(array $input) {
+        $exist = $this->getConn()->table('faces')
+            ->where('faces_id', '=', $input['faces_id'])
+            ->exists();
+
+        if(!$exist) {
+            throw new NonExistingException("face not exist", 'invalid_face_id');
+        }
         $insertArray = array(
             'amount' => $input['amount'],
             'faces_id' => $input['faces_id']
