@@ -23,6 +23,6 @@ class LogRequestMiddleware implements TerminableInterface
 
     public function terminate(Request $request, Response $response)
     {
-        Log::info('app.requests', ['request' => $request->all(), 'response' => $response]);
+        Log::info('app.requests', ['url' => $request->getUri(), 'request' => $request->all(), 'response' => $response]);
     }
 }
