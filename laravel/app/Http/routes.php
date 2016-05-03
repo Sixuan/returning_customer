@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 
-Route::group(['prefix' => 'api'], function () {
+Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
 
     //LOGIN
     Route::post('stores/login', 'AccountController@login');

@@ -41,6 +41,13 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+$app->configureMonologUsing(function($monolog) {
+    $handler = new \Monolog\Handler\StreamHandler(storage_path('logs/laravel.log'));
+    $handler->setFormatter(new \Monolog\Formatter\LineFormatter(null, null, true, true));
+    $monolog->pushHandler($handler);
+    return $monolog;
+});
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application
