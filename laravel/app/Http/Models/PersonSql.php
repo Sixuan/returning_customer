@@ -366,11 +366,19 @@ class PersonSql extends BaseModelSql
 
     public function createPersonMemberFromInputArray(array $input) {
 
+        $personId = null;
         $faceId = $input['faces_id'];
         $personId = $this->getConn()->table('faces')
             ->where('faces_id', '=', $faceId)
             ->pluck('persons_id');
-        $personId = $personId[0];
+
+        if(empty($personId)) {
+            throw new NonExistingException("Sale id is invalid, can not find.", "person_non_existing");
+        }
+
+        if(isset($personId[0])){
+            $personId = $personId[0];
+        }
 
         $this->getConn()->beginTransaction();
         //if person existing
