@@ -404,7 +404,7 @@ class PersonSql extends BaseModelSql
             if(isset($input['address'])){
                 $updateArray['address'] = $input['address'];
             }
-
+            \Log::info("Update person", $updateArray);
             if(sizeof($updateArray) > 0){
                 $this->getConn()->table('persons')
                     ->where('persons_id', '=', $personId)
@@ -445,7 +445,7 @@ class PersonSql extends BaseModelSql
             if(isset($input['address'])){
                 $insertArray['address'] = $input['address'];
             }
-
+            \Log::info("Update person", $insertArray);
             $personId = $this->getConn()->table('persons')
                 ->insertGetId($insertArray);
 
