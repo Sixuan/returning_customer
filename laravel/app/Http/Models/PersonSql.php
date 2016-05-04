@@ -445,7 +445,7 @@ class PersonSql extends BaseModelSql
             if(isset($input['address'])){
                 $insertArray['address'] = $input['address'];
             }
-            \Log::info("Update person", $insertArray);
+            \Log::info("Insert person", $insertArray);
             $personId = $this->getConn()->table('persons')
                 ->insertGetId($insertArray);
 
