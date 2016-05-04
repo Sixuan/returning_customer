@@ -373,13 +373,12 @@ class PersonSql extends BaseModelSql
             ->where('faces_id', '=', $faceId)
             ->pluck('persons_id');
 
-
         if(empty($face)) {
             throw new NonExistingException("face not exist", 'invalid_face_id');
         }
 
         if(isset($face[0])){
-            $personId = $personId[0];
+            $personId = $face[0];
         }
 
         $this->getConn()->beginTransaction();
@@ -450,14 +449,14 @@ class PersonSql extends BaseModelSql
             $personId = $this->getConn()->table('persons')
                 ->insertGetId($insertArray);
 
-
-            $this->getConn()->table('faces')
-                ->where('faces_id', '=', $faceId)
-                ->update(['persons_id' => $personId]);
-
         }
 
         $this->getConn()->commit();
+
+        $this->getConn()->table('faces')
+            ->where('faces_id', '=', $faceId)
+            ->update(['persons_id' => $personId]);
+
         $person = $this->getConn()->table('persons')
             ->where('persons_id', '=', $personId)
             ->first();
