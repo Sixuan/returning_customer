@@ -298,9 +298,16 @@ class PersonSql extends BaseModelSql
      * @return array
      */
     public function getMember($personId) {
-        $person = $this->getConn()->table('persons')
-            ->where('persons_id', '=', $personId)
-            ->first();
+        $person = $this->getConn()->table('persons as p')
+            ->where('p.persons_id', '=', $personId)
+            ->join('faces as f', 'f.persons_id', '=', 'p.persons_id')
+            ->join('images as i', 'i.faces_id', '=', 'f.faces_id')
+            ->first([
+                'p.*',
+                'f.faces_id',
+                'i.images_id',
+                'img_path'
+            ]);
 
         return (array)$person;
     }
