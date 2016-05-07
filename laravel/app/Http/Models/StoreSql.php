@@ -211,7 +211,7 @@ class StoreSql extends BaseModelSql
             join cameras c on (f.cameras_id = c.cameras_id )
             join stores s on (c.stores_id = s.stores_id)
             left join transactions t on (f.faces_id = t.faces_id)
-            where DATE(f.timestamp) <= CURRENT_DATE
+            where DATE(f.timestamp) = CURRENT_DATE
                   and s.stores_id = '.$storeId
         ));
 
@@ -229,9 +229,9 @@ class StoreSql extends BaseModelSql
             join cameras c on (f.cameras_id = c.cameras_id )
             join stores s on (c.stores_id = s.stores_id)
             join images i on (i.faces_id = f.faces_id)
-            where f.timestamp < DATE_SUB(NOW(),INTERVAL 1 MINUTE)
+            where f.timestamp >= DATE_SUB(NOW(),INTERVAL 1 HOUR)
                 and i.is_display = "Y"
-                and s.stores_id = '.$storeId." group by f.faces_id"
+                and s.stores_id = '.$storeId." group by f.faces_id order by f.timestamp desc"
         ));
 
         $facesRe = array();

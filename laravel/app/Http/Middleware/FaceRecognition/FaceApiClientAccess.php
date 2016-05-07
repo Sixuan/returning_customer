@@ -24,10 +24,10 @@ class FaceApiClientAccess
      */
     public function handle($request, Closure $next)
     {
-//        $token = $request->header('Authorization');
-//        $valid = StoreSql::getInstance()->isTokenValid($token);
+        $token = $request->header('Authorization');
+        $valid = StoreSql::getInstance()->isTokenValid($token);
 
-        return $next($request);
+        //return $next($request);
 
         if(!in_array($token, $this->permanentTokens) && !$valid) {
             return response(['status' => 'Unauthorized.'], 401);
