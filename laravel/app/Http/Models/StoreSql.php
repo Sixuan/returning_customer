@@ -222,6 +222,7 @@ class StoreSql extends BaseModelSql
                 f.faces_id,
                 f.cameras_id,
                 f.persons_id,
+                f.timestamp,
                 p.name,
                 f.possible_returning_customers
             from faces f
