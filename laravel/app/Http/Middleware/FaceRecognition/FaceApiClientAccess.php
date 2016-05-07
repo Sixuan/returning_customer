@@ -29,7 +29,7 @@ class FaceApiClientAccess
 
         //return $next($request);
 
-        if(!in_array($token, $this->permanentTokens) && !$valid) {
+        if(!in_array($token, $this->permanentClient) && !$valid) {
             return response(['status' => 'Unauthorized.'], 401);
         }
 
