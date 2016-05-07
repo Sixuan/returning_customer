@@ -198,7 +198,7 @@ class StoreSql extends BaseModelSql
 
     //@todo use correct time range when this goes live
     //right now it's entire time range
-    public function loadFaces($storeId) {
+    public function loadFaces($storeId, $hour = 1) {
 
         //@todo change to DATE(f.timestamp) = CURRENT_DATE
         $storeData = \DB::select(\DB::raw(
@@ -229,7 +229,7 @@ class StoreSql extends BaseModelSql
             join cameras c on (f.cameras_id = c.cameras_id )
             join stores s on (c.stores_id = s.stores_id)
             join images i on (i.faces_id = f.faces_id)
-            where f.timestamp >= DATE_SUB(NOW(),INTERVAL 1 HOUR)
+            where f.timestamp >= DATE_SUB(NOW(),INTERVAL '.$hour.' HOUR)
                 and i.is_display = "Y"
                 and s.stores_id = '.$storeId." group by f.faces_id order by f.timestamp desc"
         ));

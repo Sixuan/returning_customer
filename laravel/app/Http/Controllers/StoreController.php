@@ -181,9 +181,10 @@ class StoreController extends Controller
      * @param $id
      * @return Response
      */
-    public function load($id) {
+    public function load(Request $request, $id) {
         try{
-            $content = StoreSql::getInstance()->loadFaces($id);
+            $hour = $request->input('hour', 1);
+            $content = StoreSql::getInstance()->loadFaces($id, $hour);
             return self::buildResponse($content, self::SUCCESS_CODE);
         }catch (\Exception $e) {
             $content = array(
