@@ -266,6 +266,10 @@ class PersonSql extends BaseModelSql
             $updateArray['age'] = $input['age'];
         }
 
+        if(isset($input['gender'])){
+            $updateArray['gender'] = $input['gender'];
+        }
+
 
         if(!empty($updateArray)) {
             $this->getConn()->table('persons')
