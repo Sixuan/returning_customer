@@ -48,11 +48,16 @@ class StoreSql extends BaseModelSql
         }
     }
 
-    public function isTokenValid($token) {
-        return $this->getConn()->table('sales')
+    public function isTokenValid($token, $manager = 'N') {
+        $check = $this->getConn()->table('sales')
             ->where('remember_token', '=', $token)
-            ->where('updated_at', '>', \DB::raw("DATE(NOW() - INTERVAL 2 DAY)"))
-            ->exists();
+            ->where('updated_at', '>', \DB::raw("DATE(NOW() - INTERVAL 2 DAY)"));
+        
+        if($manager == 'Y') {
+            $check->where('manager', '=', 'Y');
+        }
+        
+        return $check->exists();
     }
 
     public function updateStore(array $input, $id) {

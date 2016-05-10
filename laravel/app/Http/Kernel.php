@@ -49,6 +49,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'storeAuth' => \App\Http\Middleware\AccessStore::class,
+        'storeAdminAuth' => \App\Http\Middleware\AccessStoreAdmin::class,
         'logRequest' => \App\Http\Middleware\LogRequestMiddleware ::class
     ];
 }

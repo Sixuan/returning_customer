@@ -39,14 +39,19 @@ Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
 //    Route::post('admin/stores/{id}/sales', 'ImageController@update'); //@todo create account
     //CREATE ACCOUNT(NOT BEING USED)
     Route::post('auth/{storeId}', 'AccountController@create');
-
-    Route::group(['middleware' => ['storeAuth']], function () {
+    
+    Route::group(['middleware' => ['storeAdminAuth']], function () {
         Route::get('admin/stores/{id}/persons', 'StoreController@persons');
         Route::get('admin/stores/{id}/visitsAndTrans', 'StoreController@visitsAndTrans');
 
         Route::get('admin/stores/{id}/sales', 'SaleController@sales');
         Route::delete('admin/sales/{id}', 'SaleController@destroy');
         Route::put('admin/sales/{id}', 'SaleController@update');
+        Route::put('admin/persons/{id}', 'MemberController@update');
+
+    });
+
+    Route::group(['middleware' => ['storeAuth']], function () {
 
         Route::post('members', 'MemberController@store');
         Route::put('members/{id}', 'MemberController@update');
@@ -77,7 +82,6 @@ Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
 
 //    Route::post('admin/sales', 'SaleController@store');
 
-        Route::put('admin/persons/{id}', 'MemberController@update');
 
     });
 

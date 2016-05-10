@@ -1,20 +1,20 @@
 <?php
-
 /**
  * Created by PhpStorm.
  * User: sixuanliu
- * Date: 4/17/16
- * Time: 3:09 PM
+ * Date: 5/9/16
+ * Time: 10:18 PM
  */
-namespace App\Http\Middleware\FaceRecognition;
+
+namespace App\Http\Middleware;
 
 use App\Http\Models\StoreSql;
 use Closure;
 
-class FaceApiClientAccess
+class AccessStoreAdmin
 {
     //Testing purposes
-    protected $permanentClient = ['5582a62985bb0b056875b0991db9350f'];
+    protected $permanentTokens = ['5582a62985bb0b056875b0991db9350f'];
     /**
      * Handle an incoming request.
      *
@@ -25,15 +25,12 @@ class FaceApiClientAccess
     public function handle($request, Closure $next)
     {
         $token = $request->header('Authorization');
-        $valid = StoreSql::getInstance()->isTokenValid($token);
+        $valid = StoreSql::getInstance()->isTokenValid($token, 'Y');
 
-        //return $next($request);
-
-        if(!in_array($token, $this->permanentClient) && !$valid) {
+        if(!in_array($token, $this->permanentTokens) && !$valid) {
             return response(['status' => 'Unauthorized.'], 401);
         }
 
         return $next($request);
     }
-
 }
