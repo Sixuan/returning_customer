@@ -20,6 +20,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
 
     //LOGIN
     Route::post('stores/login', 'AccountController@login');
+    Route::post('stores', 'StoreController@store');
 
     //Create sale account
     Route::post('admin/stores/{id}/sales', 'AccountController@create');
@@ -67,7 +68,6 @@ Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
 
         Route::get('stores/{id}/faces', 'StoreController@load');
         Route::put('stores/{id}', 'StoreController@update');
-        Route::post('stores', 'StoreController@store');
         Route::post('stores/{id}/cameras', 'StoreController@addCamera');
 
         Route::get('persons/{id}', 'PersonController@get');
