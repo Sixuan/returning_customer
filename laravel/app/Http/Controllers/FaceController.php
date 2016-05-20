@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\BadRequestException;
 use App\Http\Models\FaceSql;
+use App\Http\Models\PersonSql;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -77,6 +78,28 @@ class FaceController extends Controller
             $face = FaceSql::getInstance()->createFaceFromInputArray($input);
             return self::buildResponse($face, self::SUCCESS_CODE);
 
+        }catch (\Exception $e) {
+            $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'message' => $e->getMessage(),
+                'error' => (string)$e
+            );
+            return self::buildResponse($content, self::BAD_REQUEST);
+        }
+    }
+
+    /**
+     * @param $faceId
+     * @return Response
+     */
+    public function addPerson($faceId) {
+        try{
+            $personId = PersonSql::getInstance()->createPersonForFace($faceId);
+            $response = [
+                'faces_id' => $faceId,
+                'persons_id' => $personId
+            ];
+            return self::buildResponse($response, self::SUCCESS_CODE);
         }catch (\Exception $e) {
             $content = array(
                 'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,

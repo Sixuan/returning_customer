@@ -11,6 +11,7 @@ namespace App\Http\Models;
 
 use App\Exceptions\AuthException;
 use App\Exceptions\BadRequestException;
+use App\Exceptions\InvalidActionException;
 use App\Exceptions\NonExistingException;
 
 class PersonSql extends BaseModelSql
@@ -233,6 +234,42 @@ class PersonSql extends BaseModelSql
         return (array)$this->getConn()->table('persons')
             ->where('persons_id', '=', $id)
             ->first();
+    }
+    
+    public function doesFaceBelongToPerson($faceId) {
+        return $this->getConn()->table('faces')
+            ->whereNotNull('persons_id')
+            ->where('faces_id', '=', $faceId)
+            ->exists();
+    }
+
+    /**
+     * @param $faceId
+     * @return int
+     * @throws InvalidActionException
+     */
+    public function createPersonForFace($faceId) {
+        if($this->doesFaceBelongToPerson($faceId)) {
+            throw new InvalidActionException("face already has person id.", "invalid_action");
+        }
+        $input = [
+            'algo_added' => 'Y',
+            'name' => 'guest'
+        ];
+
+        $conn = $this->getConn();
+        $conn->beginTransaction();
+        $id = $conn->table('persons')
+            ->insertGetId($input);
+        $conn->table('faces')
+            ->where('faces_id', '=', $faceId)
+            ->update(
+                [
+                    'persons_id' => $id
+                ]
+            );
+        $conn->commit();
+        return $id;
     }
 
     /**

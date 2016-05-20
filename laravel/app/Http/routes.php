@@ -66,6 +66,8 @@ Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
         Route::get('faces/{id}', 'FaceController@get');
         Route::put('faces/{id}', 'FaceController@update');
         Route::post('faces', 'FaceController@store');
+        Route::post('faces/persons/{id}', 'FaceController@addPerson');
+
 
         Route::get('stores/{id}/faces', 'StoreController@load');
         Route::put('stores/{id}', 'StoreController@update');
