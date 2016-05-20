@@ -42,7 +42,7 @@ $app->singleton(
 );
 
 $app->configureMonologUsing(function($monolog) {
-    $handler = new \Monolog\Handler\StreamHandler(storage_path('logs/laravel.log'));
+    $handler = new \Monolog\Handler\StreamHandler(storage_path('logs/'.date('Y-m-d').'.log'));
     $handler->setFormatter(new \Monolog\Formatter\LineFormatter(null, null, true, true));
     $monolog->pushHandler($handler);
     return $monolog;
