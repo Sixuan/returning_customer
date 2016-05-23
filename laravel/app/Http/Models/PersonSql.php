@@ -307,7 +307,8 @@ class PersonSql extends BaseModelSql
             $updateArray['gender'] = $input['gender'];
         }
 
-
+        //while updating person info, set algo_added = 'N'
+        $updateArray['algo_added'] = 'N';
         if(!empty($updateArray)) {
             $this->getConn()->table('persons')
                 ->where('persons_id', '=', $personId)
