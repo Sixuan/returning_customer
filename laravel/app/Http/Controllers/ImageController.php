@@ -67,4 +67,25 @@ class ImageController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function delete(Request $request) {
+        $input = $request->input();
+        try{
+            $imagesId = $input['images_id'];
+            ImageSql::getInstance()->deleteImagesByIds($imagesId);
+            return self::buildSuccessResponse();
+
+        }catch (\Exception $e) {
+            $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'message' => $e->getMessage(),
+                'error' => (string)$e
+            );
+            return self::buildResponse($content, self::BAD_REQUEST);
+        }
+    }
+
 }

@@ -78,5 +78,12 @@ class ImageSql extends BaseModelSql
 
         return $this->getImage($id);
     }
+    
+    public function deleteImagesByIds($imagesId) {
 
+        $imagesIdArray = explode(',', $imagesId);
+        $this->getConn()->table('images')
+            ->whereIn('images_id', $imagesIdArray)
+            ->delete();
+    }
 }

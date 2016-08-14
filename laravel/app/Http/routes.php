@@ -50,6 +50,8 @@ Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
         Route::delete('admin/sales/{id}', 'SaleController@destroy');
         Route::put('admin/sales/{id}', 'SaleController@update');
         Route::put('admin/persons/{id}', 'MemberController@update');
+        
+        Route::delete('admin/store/{id}', 'StoreController@flush');
 
     });
 
@@ -80,6 +82,8 @@ Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
         Route::get('images/{id}', 'ImageController@get');
         Route::put('images/{id}', 'ImageController@update');
         Route::post('images', 'ImageController@store');
+        Route::delete('images', 'ImageController@delete');
+
 
 
 //    Route::post('admin/sales', 'SaleController@store');

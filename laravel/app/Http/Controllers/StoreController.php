@@ -239,6 +239,22 @@ class StoreController extends Controller
     }
 
     /**
+     * @param $storeId
+     * @return Response
+     */
+    public function flush($storeId)
+    {
+        StoreSql::getInstance()->resetStore($storeId);
+        $store = StoreSql::getInstance()->getStore($storeId);
+        $persons = StoreSql::getInstance()->getPersonsForStore($storeId);
+        $content = [
+            'store' => $store,
+            'persons' => $persons
+        ];
+        return self::buildResponse($content, self::SUCCESS_CODE);
+    }
+
+    /**
      * @param Request $request
      * @param $storeId
      * @return Response

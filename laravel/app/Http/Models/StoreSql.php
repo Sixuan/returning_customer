@@ -118,6 +118,13 @@ class StoreSql extends BaseModelSql
 
         return array_values($stores);
     }
+
+    public function resetStore($storeId)
+    {
+        \DB::delete("delete faces from faces join cameras on (faces.cameras_id = cameras.cameras_id) 
+join stores on (stores.stores_id = cameras.stores_id) where stores.stores_id = ".$storeId);
+    }
+
     /**
      * @param $storeId
      * @return array
