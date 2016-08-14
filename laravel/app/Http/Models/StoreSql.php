@@ -30,6 +30,45 @@ class StoreSql extends BaseModelSql
         return self::$storeSqlSingleton;
     }
 
+    public function getFaces($storeId, $offset, $limit, \DateTime $startTime, \DateTime $endTime)
+    {
+        $faces = $this->getConn()->table('faces as f')
+            ->join('cameras as c', 'f.cameras_id', '=', 'c.cameras_id')
+            ->join('stores as s', 's.stores_id', '=', 'c.stores_id')
+            ->join('images as i', 'i.faces_id', '=', 'f.faces_id')
+            ->where('f.timestamp', '>=', $startTime->format('Y-m-d H:i:s'))
+            ->where('f.timestamp', '<=', $endTime->format('Y-m-d H:i:s'))
+            ->where('s.stores_id', '=', $storeId)
+            ->offset($offset)
+            ->limit($limit)
+            ->get(['f.idFaces', 'i.img_path', 'i.images_id', 'f.timestamp', 's.stores_id', 'f.cameras_id']);
+        
+        $res = [];
+        foreach ($faces as $face) {
+            $res[$face->idFaces]['idFaces'] = $face->idFaces;
+            $res[$face->idFaces]['cameras_id'] = $face->cameras_id;
+            $res[$face->idFaces]['stores_id'] = $face->stores_id;
+            $res[$face->idFaces]['timestamp'] = $face->timestamp;
+            $res[$face->idFaces]['images'][] = [
+                'images_id' => $face->images_id,
+                'img_path' => $face->img_path
+            ];
+        }
+
+        return array_values($res);
+    }
+
+    public function getTotalFaces($storeId, \DateTime $startTime, \DateTime $endTime)
+    {
+        return (int)$this->getConn()->table('faces as f')
+            ->join('cameras as c', 'f.cameras_id', '=', 'c.cameras_id')
+            ->join('stores as s', 's.stores_id', '=', 'c.stores_id')
+            ->where('f.timestamp', '>=', $startTime->format('Y-m-d H:i:s'))
+            ->where('f.timestamp', '<=', $endTime->format('Y-m-d H:i:s'))
+            ->where('s.stores_id', '=', $storeId)
+            ->count();
+    }
+    
     /**
      * @param $token
      * @return mixed

@@ -53,6 +53,9 @@ Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
         
         Route::delete('admin/store/{id}', 'StoreController@flush');
 
+
+        //Night label
+        Route::get('admin/stores/{id}/faces', 'StoreController@faces');
     });
 
     Route::group(['middleware' => ['storeAuth']], function () {

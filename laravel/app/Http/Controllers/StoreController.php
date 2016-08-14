@@ -12,6 +12,7 @@ use App\Http\Models\StoreSql;
 use App\Http\Requests\FormPostRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpKernel\HttpCache\Store;
 
 
 class StoreController extends Controller
@@ -81,6 +82,36 @@ class StoreController extends Controller
             $persons = StoreSql::getInstance()->getPersonsForStore($id);
             $content ['persons'] = $persons;
             return self::buildResponse($content, self::SUCCESS_CODE);
+        }catch (\Exception $e) {
+            $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'message' => $e->getMessage(),
+                'error' => (string)$e
+            );
+            return self::buildResponse($content, self::BAD_REQUEST);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param $storeId
+     * @return Response
+     */
+    public function faces(Request $request, $storeId)
+    {
+        try{
+            $offset = $request->get('offset', 0);
+            $limit = $request->get('limit', 50);
+            $start = new \DateTime($request->get('start'));
+            $end = new \DateTime($request->get('end'));
+            $faces = StoreSql::getInstance()->getFaces($storeId, $offset, $limit, $start, $end);
+
+            $content['faces'] = $faces;
+            $content['input'] = $request->input();
+            $content['total'] = StoreSql::getInstance()->getTotalFaces($storeId, $start, $end);
+
+            return self::buildResponse($content, self::SUCCESS_CODE);
+
         }catch (\Exception $e) {
             $content = array(
                 'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
