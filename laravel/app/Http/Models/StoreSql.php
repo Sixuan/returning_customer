@@ -8,7 +8,6 @@
 
 namespace App\Http\Models;
 
-
 use App\Exceptions\ApiInputException;
 use App\Exceptions\AuthException;
 
@@ -28,6 +27,36 @@ class StoreSql extends BaseModelSql
             self::$storeSqlSingleton = new StoreSql();
         }
         return self::$storeSqlSingleton;
+    }
+    
+    public function addHours($storeId, array $data = [])
+    {
+        $conn = $this->getConn();
+        $start = $data['start'];
+        $end = $data['end'];
+
+        $startDate = new \DateTime($start);
+        $endDate = new \DateTime($end);
+
+        $exist = $conn->table('store_hours')
+            ->where('stores_id', '=', $storeId)
+            ->exists();
+
+        $upsertArray = [
+            'start_time' => $startDate->format('H:i:s'),
+            'end_time' => $endDate->format('H:i:s')
+        ];
+
+        if($exist) {
+            $conn->table('store_hours')
+                ->where('stores_id', '=', $storeId)
+                ->update($upsertArray);
+        } else {
+            $upsertArray['stores_id'] = $storeId;
+            $conn->table('store_hours')
+                ->where('stores_id', '=', $storeId)
+                ->insert($upsertArray);
+        }
     }
 
     public function getFaces($storeId, $offset, $limit, \DateTime $startTime, \DateTime $endTime)
@@ -172,14 +201,26 @@ join stores on (stores.stores_id = cameras.stores_id) where stores.stores_id = "
 
         $infos = $this->getConn()->table('stores as s')
             ->leftJoin('cameras as c', 's.stores_id', '=', 'c.stores_id')
+            ->leftJoin('store_hours as sh', 's.stores_id', '=', 'sh.stores_id')
             ->where('s.stores_id', '=', $storeId)
-            ->get(['s.stores_id', 's.name', 'c.position', 'c.cameras_id', 'c.rtsp_url']);
+            ->get([
+                's.stores_id',
+                's.name',
+                'c.position',
+                'c.cameras_id',
+                'c.rtsp_url',
+                'sh.start_time',
+                'sh.end_time'
+            ]);
 
         $store = [];
 
         foreach($infos as $info) {
             $store['name'] = $info->name;
             $store['stores_id'] = $info->stores_id;
+            $store['store_hours']['start'] = $info->start_time;
+            $store['store_hours']['end'] = $info->end_time;
+
             if($info->cameras_id != null) {
                 $store['cameras'][] = array(
                     'cameras_id' => $info->cameras_id,

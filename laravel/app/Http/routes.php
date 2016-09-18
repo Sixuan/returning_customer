@@ -57,8 +57,9 @@ Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
         //Night label
         Route::get('admin/stores/{id}/faces', 'StoreController@faces');
         
-        //Top view counter
+        //Top view counter - V2
         Route::get('admin/stores/{id}/visits', 'TopViewController@index');
+        Route::post('admin/stores/{id}/hours', 'StoreHourController@store');
 
     });
 
