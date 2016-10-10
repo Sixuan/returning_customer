@@ -60,7 +60,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
         //Top view counter - V2
         Route::get('admin/stores/{id}/visits', 'TopViewController@index');
         Route::post('admin/stores/{id}/hours', 'StoreHourController@store');
-
+        Route::get('admin/stores/{id}/hours', 'StoreHourController@get');
     });
 
     Route::group(['middleware' => ['storeAuth']], function () {

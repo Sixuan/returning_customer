@@ -36,4 +36,23 @@ class StoreHourController extends Controller
             return self::buildResponse($content, self::BAD_REQUEST);
         }
     }
+
+    /**
+     * @param $id
+     * @return Response
+     */
+    public function get($id)
+    {
+        try{
+            $hours = StoreSql::getInstance()->getStoreHours($id);
+            return self::buildResponse(['hours' => $hours], self::SUCCESS_CODE);
+        }catch (\Exception $e) {
+            $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'message' => $e->getMessage(),
+                'error' => (string)$e
+            );
+            return self::buildResponse($content, self::BAD_REQUEST);
+        }
+    }
 }

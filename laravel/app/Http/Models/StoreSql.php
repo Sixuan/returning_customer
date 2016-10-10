@@ -28,6 +28,14 @@ class StoreSql extends BaseModelSql
         }
         return self::$storeSqlSingleton;
     }
+
+    public function getStoreHours($storeId)
+    {
+        $conn = $this->getConn();
+        return $conn->table('store_hours')
+            ->where('stores_id', '=', $storeId)
+            ->first(['stores_id', 'start_time', 'end_time']);
+    }
     
     public function addHours($storeId, array $data = [])
     {
