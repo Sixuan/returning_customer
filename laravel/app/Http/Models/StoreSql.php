@@ -10,6 +10,7 @@ namespace App\Http\Models;
 
 use App\Exceptions\ApiInputException;
 use App\Exceptions\AuthException;
+use App\Exceptions\NonExistingException;
 
 class StoreSql extends BaseModelSql
 {
@@ -138,7 +139,34 @@ class StoreSql extends BaseModelSql
 
     public function updateStore(array $input, $id) {
         $exist = $this->getConn()->table('stores')
-            ->where('stores_id', '=', $id);
+            ->where('stores_id', '=', $id)
+            ->exists();
+        
+        if(!$exist) {
+            throw new NonExistingException("Store not existing, id: ".$id);
+        }
+
+        $updateArray = [];
+
+        if(isset($input['per_week_high_frequency_threshold'])) {
+            $updateArray['per_week_high_frequency_threshold'] = $input['per_week_high_frequency_threshold'];
+        }
+
+        if(isset($input['name'])) {
+            $updateArray['name'] = $input['name'];
+        }
+
+        if(isset($input['active']) && in_array($input['active'], ['Y', 'N'])) {
+            $updateArray['active'] = $input['active'];
+        }
+
+        if($updateArray) {
+            $this->getConn()->table('stores')
+                ->where('stores_id', '=', $id)
+                ->update($updateArray);
+        }
+
+        return $this->getStore($id);
     }
 
     public function updateCamera(array $input, $cameraId) {
@@ -214,6 +242,8 @@ join stores on (stores.stores_id = cameras.stores_id) where stores.stores_id = "
             ->get([
                 's.stores_id',
                 's.name',
+                's.active',
+                's.per_week_high_frequency_threshold',
                 'c.position',
                 'c.cameras_id',
                 'c.rtsp_url',
@@ -226,6 +256,8 @@ join stores on (stores.stores_id = cameras.stores_id) where stores.stores_id = "
         foreach($infos as $info) {
             $store['name'] = $info->name;
             $store['stores_id'] = $info->stores_id;
+            $store['active'] = $info->active;
+            $store['per_week_high_frequency_threshold'] = $info->per_week_high_frequency_threshold;
             $store['store_hours']['start'] = $info->start_time;
             $store['store_hours']['end'] = $info->end_time;
 
