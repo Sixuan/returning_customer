@@ -248,6 +248,7 @@ class StoreController extends Controller
         }
     }
 
+
     /**
      * @param Request $request
      * @return Response

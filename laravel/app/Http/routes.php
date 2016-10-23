@@ -45,6 +45,17 @@ Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
     Route::group(['middleware' => ['storeAdminAuth']], function () {
         Route::get('admin/stores/{id}/persons', 'StoreController@persons');
         Route::get('admin/stores/{id}/visitsAndTrans', 'StoreController@visitsAndTrans');
+        Route::put('admin/stores/{id}', 'StoreController@update');
+
+        //Daily sales
+        Route::get('admin/stores/{id}/daily_sale', 'DailyStoreSaleController@get');
+        Route::put('admin/stores/{id}/daily_sale', 'DailyStoreSaleController@update');
+        Route::post('admin/stores/{id}/daily_sale', 'DailyStoreSaleController@store');
+
+        //Store promotion
+        Route::get('admin/stores/{id}/promotion', 'StorePromotionController@get');
+        Route::post('admin/stores/{id}/promotion', 'StorePromotionController@store');
+
 
         Route::get('admin/stores/{id}/sales', 'SaleController@sales');
         Route::delete('admin/sales/{id}', 'SaleController@destroy');
@@ -57,9 +68,10 @@ Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
         //Night label
         Route::get('admin/stores/{id}/faces', 'StoreController@faces');
         
-        //Top view counter
+        //Top view counter - V2
         Route::get('admin/stores/{id}/visits', 'TopViewController@index');
-
+        Route::post('admin/stores/{id}/hours', 'StoreHourController@store');
+        Route::get('admin/stores/{id}/hours', 'StoreHourController@get');
     });
 
     Route::group(['middleware' => ['storeAuth']], function () {
@@ -79,7 +91,6 @@ Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
 
 
         Route::get('stores/{id}/faces', 'StoreController@load');
-        Route::put('stores/{id}', 'StoreController@update');
 
         Route::get('persons/{id}', 'PersonController@get');
         Route::get('persons/multi/{id}', 'PersonController@getMulti');
