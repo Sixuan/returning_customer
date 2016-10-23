@@ -72,6 +72,10 @@ Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
         Route::get('admin/stores/{id}/visits', 'TopViewController@index');
         Route::post('admin/stores/{id}/hours', 'StoreHourController@store');
         Route::get('admin/stores/{id}/hours', 'StoreHourController@get');
+
+        //Visualize
+        Route::get('admin/stores/{id}/visualize/test', 'VisualizeController@test');
+
     });
 
     Route::group(['middleware' => ['storeAuth']], function () {

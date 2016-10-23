@@ -15,6 +15,7 @@ class Controller extends BaseController
     const BAD_AUTH = 401;
     const GENERAL_BAD_RESPONSE_MESSAGE = 'general_error';
     const BAD_RESQUEST_RESPONSE_MESSAGE = 'bad_request';
+    const SOCKET_BAD_RESPONSE_MESSAGE = 'socket_error';
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 

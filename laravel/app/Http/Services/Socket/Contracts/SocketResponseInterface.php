@@ -11,6 +11,5 @@ namespace App\Http\Services\Socket\Contracts;
 
 interface SocketResponseInterface
 {
-
     public function getContent();
 }
