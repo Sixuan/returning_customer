@@ -61,13 +61,11 @@ class ReturningCustomerDataVisualizeGateway implements ReturningCustomerDataVisu
         $this->port = env('SOCKET_PORT', self::RECOGNITION_PORT_DEFAULT);
     }
 
-    public function findAll($storeId, array $filters = [])
+    public function get($method, array $payload = [])
     {
         $payload = [
-            'method' => 'findAll',
-            'payload' => [
-                'store_id' => $storeId
-            ]
+            'method' => $method,
+            'payload' => $payload
         ];
 
         $request = new SocketRequest(

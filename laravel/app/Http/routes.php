@@ -75,7 +75,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
 
         //Visualize
         Route::get('admin/stores/{id}/visualize/test', 'VisualizeController@test');
-
+        Route::get('admin/stores/{id}/visualize', 'VisualizeController@get');
     });
 
     Route::group(['middleware' => ['storeAuth']], function () {
