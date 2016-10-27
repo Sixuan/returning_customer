@@ -9,7 +9,10 @@ namespace App\Http\Models\Gateways;
 
 interface ReturningCustomerDataVisualizeGatewayInterface
 {
-    public function findAll($storeId, array $filters = []);
+    /**
+     * @return \App\Http\Services\Socket\Contracts\SocketResponseInterface
+     */
+    public function get($method, array $payloads = []);
 
     /**
      * @return \App\Http\Services\Socket\Contracts\SocketResponseInterface
