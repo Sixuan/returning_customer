@@ -19,7 +19,7 @@ class VisualizeController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function get(Request $request)
+    public function fetch(Request $request)
     {
         try{
             $method = $request->get('method', 'test');
