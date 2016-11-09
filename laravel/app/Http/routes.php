@@ -51,11 +51,13 @@ Route::group(['prefix' => 'api', 'middleware' => 'logRequest'], function () {
         Route::get('admin/stores/{id}/daily_sale', 'DailyStoreSaleController@get');
         Route::put('admin/stores/{id}/daily_sale', 'DailyStoreSaleController@update');
         Route::post('admin/stores/{id}/daily_sale', 'DailyStoreSaleController@store');
+        Route::delete('admin/stores/{id}/daily_sale', 'DailyStoreSaleController@destroy');
+
 
         //Store promotion
         Route::get('admin/stores/{id}/promotion', 'StorePromotionController@get');
         Route::post('admin/stores/{id}/promotion', 'StorePromotionController@store');
-
+        Route::delete('admin/stores/{id}/promotion', 'StorePromotionController@destroy');
 
         Route::get('admin/stores/{id}/sales', 'SaleController@sales');
         Route::delete('admin/sales/{id}', 'SaleController@destroy');

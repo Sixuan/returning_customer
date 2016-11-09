@@ -42,13 +42,38 @@ class StorePromotionController extends Controller
         }
     }
 
-
+    /**
+     * @param Request $request
+     * @param $storeId
+     * @return Response
+     */
     public function get(Request $request, $storeId) {
         try {
             $input = $request->input();
 
             $promotions = StorePropertySql::getInstance()->getStorePromotion($input, $storeId);
             return self::buildResponse(['promotions' => $promotions], self::SUCCESS_CODE);
+
+        } catch (\Exception $e) {
+            $content = array(
+                'status' => self::GENERAL_BAD_RESPONSE_MESSAGE,
+                'message' => $e->getMessage(),
+                'error' => (string)$e
+            );
+            return self::buildResponse($content, self::BAD_REQUEST);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param $storeId
+     * @return Response
+     */
+    public function destroy(Request $request, $storeId) {
+        try {
+            $input = $request->input();
+            StorePropertySql::getInstance()->deleteStorePromotion($input, $storeId);
+            return self::buildSuccessResponse();
 
         } catch (\Exception $e) {
             $content = array(
