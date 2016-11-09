@@ -30,6 +30,31 @@ class StorePropertySql extends BaseModelSql
     /**
      * @param array $input
      * @param $storeId
+     * @throws NonExistingException
+     */
+    public function deleteDailySales(array $input, $storeId)
+    {
+        $conn = $this->getConn();
+        $exist = $conn->table('stores')
+            ->where('stores_id', '=', $storeId)
+            ->exists();
+
+        if(!$exist) {
+            throw new NonExistingException('store not existing id: '.$storeId);
+        }
+        
+        $date = $input['date_of_sale'];
+
+        $conn->table('store_daily_sales')
+            ->where('stores_id', '=', $storeId)
+            ->where('date_of_sale', '=', $date)
+            ->delete();
+
+    }
+
+    /**
+     * @param array $input
+     * @param $storeId
      * @return mixed|static
      * @throws NonExistingException
      */
@@ -122,6 +147,28 @@ class StorePropertySql extends BaseModelSql
         return null;
     }
 
+    /**
+     * @param array $input
+     * @param $storeId
+     * @throws NonExistingException
+     */
+    public function deleteStorePromotion(array $input, $storeId)
+    {
+        $conn = $this->getConn();
+        $exist = $conn->table('stores')
+            ->where('stores_id', '=', $storeId)
+            ->exists();
+
+        if(!$exist) {
+            throw new NonExistingException('store not existing id: '.$storeId);
+        }
+
+        $date = $input['date'];
+        $conn->table('store_promotions')
+            ->where('stores_id', '=', $storeId)
+            ->where('date', '=', $date)
+            ->delete();
+    }
     /**
      * @param array $input
      * @param $storeId
